@@ -16,5 +16,11 @@ namespace Model
         public DateTime CreateTime { get; set; }
         [StringLength(250)]
         public string SortCode { get; set; }
+        public BaseEntity()
+        {
+            ID = Guid.NewGuid();
+            CreateTime = DateTime.Now;
+            SortCode = DateTime.Now.ToString("yyyyMMddHHmmss");
+        }
     }
 }

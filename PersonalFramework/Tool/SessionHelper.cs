@@ -15,7 +15,7 @@ namespace PersonalFramework.Tool
         }
         public T GetSession(string key)
         {
-            var entity = (T)Session[key];
+            var entity = (T)HttpContext.Current.Session[key];
             return entity;
         }
     }

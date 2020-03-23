@@ -23,5 +23,6 @@ namespace Model
         public string Token { get; set; }
         [StringLength(250)]
         public string LastLoginIP { get; set; }
+        public DateTime LastLoginTime { get; set; }
     }
 }

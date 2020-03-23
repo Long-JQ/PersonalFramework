@@ -1,4 +1,8 @@
-﻿<table id="demo" lay-filter="test"></table>
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table id="demo" lay-filter="test"></table>
 
 <script>
     layui.use('table', function () {
@@ -11,7 +15,7 @@
             , url: '/api/user/list' //数据接口
             , page: true //开启分页
             , cols: [[ //表头
-                { field: 'ID', title: 'ID',  sort: true, fixed: 'left' }
+                { field: 'ID', title: 'ID', sort: true, fixed: 'left' }
                 , { field: 'UserName', title: '用户名' }
                 , { field: 'sex', title: '性别', sort: true }
                 , { field: 'city', title: '城市' }

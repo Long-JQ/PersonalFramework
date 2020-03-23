@@ -37,6 +37,10 @@ namespace PersonalFramework.Controllers
 
             }
         }
+        public ActionResult Index()
+        {
+            return View();
+        }
         public string Login(string keyword, string password)
         {
             var userService = new Context.DataContext();

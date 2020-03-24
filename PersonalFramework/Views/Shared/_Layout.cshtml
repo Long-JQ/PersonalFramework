@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{ 
+    string url = Request.Url.ToString().ToLower();
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -47,20 +50,17 @@
                 <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
                 <ul class="layui-nav layui-nav-tree" lay-filter="test">
                     <li class="layui-nav-item layui-nav-itemed">
-                        <a class="" href="javascript:;">所有商品</a>
+                        <a class="" href="javascript:;">用户</a>
                         <dl class="layui-nav-child">
-                            <dd><a href="javascript:;">列表一</a></dd>
-                            <dd><a href="javascript:;">列表二</a></dd>
-                            <dd><a href="javascript:;">列表三</a></dd>
-                            <dd><a href="">超链接</a></dd>
+                            <dd class="@(url.Contains("/user/index") ? "layui-this" : "")"><a href="@Url.Action("Index","User")">列表</a></dd>
+                            <dd class="@(url.Contains("/user/edit") ? "layui-this" : "")"><a href="@Url.Action("Edit","User")">新增</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item">
-                        <a href="javascript:;">解决方案</a>
+                        <a class="" href="javascript:;">用户</a>
                         <dl class="layui-nav-child">
-                            <dd><a href="javascript:;">列表一</a></dd>
-                            <dd><a href="javascript:;">列表二</a></dd>
-                            <dd><a href="">超链接</a></dd>
+                            <dd><a href="@Url.Action("Index","User")">列表</a></dd>
+                            <dd><a href="@Url.Action("Edit","User")">新增</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item"><a href="">云市场</a></li>
@@ -87,6 +87,18 @@
             var element = layui.element;
 
         });
+
+        //  "/Date(xxxxxxx)/"格式时间转换
+        var getTime = function (value) {
+            var date = new Date(parseInt(value.replace("/Date(", "").replace(")/", ""), 10));
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+            var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+            var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+            var sec = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+            return date.getFullYear() + "/" + month + "/" + day + " " + hour + ":" + minutes + ":" + sec;
+        }
     </script>
+    
 </body>
 </html>

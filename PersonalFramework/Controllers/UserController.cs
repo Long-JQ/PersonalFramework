@@ -6,8 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Web.Mvc;
 
 namespace PersonalFramework.Controllers
@@ -27,11 +25,14 @@ namespace PersonalFramework.Controllers
         {
             if (id.HasValue)
             {
-                return View();
+                var entity = Get(id.ToString());
+                return View(entity);
             }
             else
             {
-                return View();
+                var entity = new User();
+                entity.ID = "";
+                return View(entity);
             }
         }
         [HttpPost]
@@ -55,16 +56,6 @@ namespace PersonalFramework.Controllers
             return Json(new { data = list, code = 0, msg = "", count = list.Count() }, JsonRequestBehavior.AllowGet);
         }
 
-        public static object DeepCopyObject(object obj)
-        {
-            BinaryFormatter Formatter = new BinaryFormatter(null,
-             new StreamingContext(StreamingContextStates.Clone));
-            MemoryStream stream = new MemoryStream();
-            Formatter.Serialize(stream, obj);
-            stream.Position = 0;
-            object clonedObj = Formatter.Deserialize(stream);
-            stream.Close();
-            return clonedObj;
-        }
+        
     }
 }

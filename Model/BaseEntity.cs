@@ -11,7 +11,7 @@ namespace Model
     public class BaseEntity
     {
         [Key]
-        public Guid ID { get; set; }
+        public string ID { get; set; }
         [StringLength(250)]
         public string Description { get; set; }
         public DateTime CreateTime { get; set; }
@@ -19,7 +19,7 @@ namespace Model
         public string SortCode { get; set; }
         public BaseEntity()
         {
-            ID = Guid.NewGuid();
+            ID = Guid.NewGuid().ToString();
             CreateTime = DateTime.Now;
             SortCode = DateTime.Now.ToString("yyyyMMddHHmmss");
         }

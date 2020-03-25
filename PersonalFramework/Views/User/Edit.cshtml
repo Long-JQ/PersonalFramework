@@ -1,4 +1,5 @@
-﻿@{
+﻿@model JN.Data.User
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -25,7 +26,7 @@
                 <input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
             </div>
         </div>
-        
+
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
@@ -35,8 +36,8 @@
     </form>
 
 
-    
-    
+
+
 
     <script src="//res.layui.com/layui/dist/layui.js" charset="utf-8"></script>
     <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
@@ -46,8 +47,8 @@
                 , layer = layui.layer
                 , layedit = layui.layedit
                 , laydate = layui.laydate;
-            
-            
+
+
             //监听提交
             form.on('submit(demo1)', function (data) {
                 layer.alert(JSON.stringify(data.field), {
@@ -55,7 +56,7 @@
                 })
                 return false;
             });
-            
+
 
         });
     </script>

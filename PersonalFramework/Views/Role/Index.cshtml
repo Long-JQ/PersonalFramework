@@ -19,18 +19,13 @@
         table.render({
             elem: '#demo'
             , height: 312
-            , url: '/user/list' //数据接口
+            , url: '/role/list' //数据接口
             , page: true //开启分页
             , toolbar: '#headtool'
             , cols: [[ //表头
                 { type: 'checkbox', fixed: 'left' }
                 , { field: 'ID', title: 'ID', sort: true, fixed: 'left' }
-                , { field: 'UserName', title: '用户名' }
-                , { field: 'sex', title: '性别', sort: true }
-                , { field: 'city', title: '城市' }
-                , { field: 'sign', title: '签名' }
-                , { field: 'experience', title: '积分', sort: true }
-                , { field: 'score', title: '评分', sort: true }
+                , { field: 'RoleName', title: '角色名' }
                 , { field: 'SortCode', title: '排序码', sort: true }
                 , { fixed: 'right', width: 165, align: 'center', toolbar: '#toolbox' }
             ]]
@@ -46,37 +41,29 @@
                     obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
                     layer.close(index);
                     //向服务端发送删除指令
-                    @*$.post('@Url.Action("Activation")', $('#form').serialize(), function (d) {
+                    $.post('@Url.Action("Delete")', { "id": obj.data["ID"]}, function (d) {
                         if (d.Status == 200) {
-                            layer.msg('@T("激活成功")')
+                            layer.msg('删除成功')
                             location.href = '/appcenter/user/index';
                         } else {
                             layer.msg(d.Message)
                         }
-                    }, 'json')*@
+                    }, 'json')
                 });
             } else if (layEvent === 'edit') { //编辑
                 //do something
-                alert("11");
+                location.href = '/role/edit?id=' + obj.data["ID"];
+                //alert(obj);
                 //同步更新缓存对应的值
-                obj.update({
-                    UserName: '123'
-                    , title: 'xxx'
-                });
-            } else if (layEvent === 'detail') { //新增
-                location.href = '/user/edit';
+                //obj.update({
+                //    UserName: '123'
+                //    , title: 'xxx'
+                //});
+            } else if (layEvent === 'add') { //新增
+                location.href = '/role/edit';
             }
         });
 
-
-        table.on('toolbar(test)', function (obj) {
-            var checkStatus = table.checkStatus(obj.config.id);
-            switch (obj.event) {
-                case 'add':
-                    location.href = '/user/edit';
-                    break;
-            };
-        });
     });
 
 

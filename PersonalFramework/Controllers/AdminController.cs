@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace PersonalFramework.Controllers
 {
-    public class UserController : BaseController<User>
+    public class AdminController : BaseController<Admin>
     {
         DataContext context = new DataContext();
         public ActionResult Index()
@@ -41,21 +41,21 @@ namespace PersonalFramework.Controllers
         //{
         //    return View();
         //}
-        //public ActionResult List(int? page, int? limit)
-        //{
-        //    var a = new User();
-        //    var b = new User();
-        //    a.RoleName = "1";
-        //    a.UserName = "2";
-        //    b = (User)DeepCopyObject(a);
-        //    a.RoleName = "2";
-        //    var list = new List<User>();
-        //    list.Add(a);
-        //    list.Add(a);
-        //    list.Add(a);
-        //    var listdata = list.ToPagedList(page ?? 1, limit ?? 1);//取数据
-        //    return Json(new { data = list, code = 0, msg = "", count = list.Count() }, JsonRequestBehavior.AllowGet);
-        //}
+        public ActionResult List(int? page, int? limit)
+        {
+            var a = new User();
+            var b = new User();
+            a.RoleName = "1";
+            a.UserName = "2";
+            b = (User)DeepCopyObject(a);
+            a.RoleName = "2";
+            var list = new List<User>();
+            list.Add(a);
+            list.Add(a);
+            list.Add(a);
+            var listdata = list.ToPagedList(page ?? 1, limit ?? 1);//取数据
+            return Json(new { data = list, code = 0, msg = "", count = list.Count() }, JsonRequestBehavior.AllowGet);
+        }
 
         
     }

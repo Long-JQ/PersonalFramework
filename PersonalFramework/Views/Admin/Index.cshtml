@@ -9,7 +9,7 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 <script type="text/html" id="headtool">
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="add">新增</a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">新增</a>
 </script>
 <script>
     layui.use('table', function () {
@@ -63,20 +63,9 @@
                     UserName: '123'
                     , title: 'xxx'
                 });
-            } else if (layEvent === 'detail') { //新增
-                location.href = '/user/edit';
             }
         });
 
-
-        table.on('toolbar(test)', function (obj) {
-            var checkStatus = table.checkStatus(obj.config.id);
-            switch (obj.event) {
-                case 'add':
-                    location.href = '/user/edit';
-                    break;
-            };
-        });
     });
 
 

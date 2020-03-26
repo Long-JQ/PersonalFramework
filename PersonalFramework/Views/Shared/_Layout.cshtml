@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>管理后台</title>
     @*<link rel="stylesheet" href="../src/css/layui.css">*@
-    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    @*<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>*@
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
     <script src="~/Content/layui/layui.js"></script>
     <link href="~/Content/layui/css/layui.css" rel="stylesheet" />
 </head>
@@ -49,18 +50,18 @@
             <div class="layui-side-scroll">
                 <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
                 <ul class="layui-nav layui-nav-tree" lay-filter="test">
-                    <li class="layui-nav-item layui-nav-itemed">
+                    <li class="layui-nav-item @(url.Contains("/user") ? "layui-nav-itemed" : "")">
                         <a class="" href="javascript:;">用户</a>
                         <dl class="layui-nav-child">
-                            <dd class="@(url.Contains("/user/index") ? "layui-this" : "")"><a href="@Url.Action("Index","User")">列表</a></dd>
-                            <dd class="@(url.Contains("/user/edit") ? "layui-this" : "")"><a href="@Url.Action("Edit","User")">新增</a></dd>
+                            <dd class="@(url.Contains("/user/index") ? "layui-this" : "")"><a href="/user/index">列表</a></dd>
+                            <dd class="@(url.Contains("/user/edit") ? "layui-this" : "")"><a href="@Url.Action("Edit","User")">编辑</a></dd>
                         </dl>
                     </li>
-                    <li class="layui-nav-item">
-                        <a class="" href="javascript:;">用户</a>
+                    <li class="layui-nav-item @(url.Contains("/role") ? "layui-nav-itemed" : "")">
+                        <a class="" href="javascript:;">角色</a>
                         <dl class="layui-nav-child">
-                            <dd><a href="@Url.Action("Index","User")">列表</a></dd>
-                            <dd><a href="@Url.Action("Edit","User")">新增</a></dd>
+                            <dd class="@(url.Contains("/role/index") ? "layui-this" : "")"><a href="/role/index">列表</a></dd>
+                            <dd class="@(url.Contains("/role/edit") ? "layui-this" : "")"><a href="@Url.Action("Edit","Role")">编辑</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item"><a href="">云市场</a></li>

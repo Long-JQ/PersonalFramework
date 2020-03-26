@@ -27,23 +27,27 @@ namespace PersonalFramework.Controllers
         {
             if (id == null)
             {
-                return "false";
+                ReturnData result = new ReturnData(500,"ID不能为空");
+                return result.ToJson();
             }
 
             var entity = context.Set<T>().Find(id);
             if (entity == null)
             {
-                return "false";
+                ReturnData result = new ReturnData(500, "未找到数据");
+                return result.ToJson();
             }
             try
             {
                 context.Set<T>().Remove(entity);
                 context.SaveChangesAsync();
-                return "true";
+                ReturnData result = new ReturnData(0);
+                return result.ToJson();
             }
-            catch (DbUpdateException /* ex */)
+            catch (Exception ex)
             {
-                return "false";
+                ReturnData result = new ReturnData(500, ex.Message);
+                return result.ToJson();
             }
         }
         
@@ -61,6 +65,20 @@ namespace PersonalFramework.Controllers
 
             return entity.ToJson();
         }
+        public T GetEntity(string id)
+        {
+            if (id == null)
+            {
+                return null;
+            }
+            var entity = context.Set<T>().Find(id);
+            if (entity == null)
+            {
+                return null;
+            }
+
+            return entity;
+        }
         public string List(Pagination pagination)
         {
             try
@@ -69,7 +87,7 @@ namespace PersonalFramework.Controllers
                 entityList = context.Set<T>().ToList();
 
                 var resultList = entityList.ToPagedList(pagination.page, pagination.limit).OrderByDescending(x => x.CreateTime);
-                ReturnData result = new ReturnData(200, "success", entityList.Count, resultList.ToJson(), pagination.page);
+                ReturnData result = new ReturnData(0, "", entityList.Count, resultList, pagination.page);
 
                 return result.ToJson();
             }
@@ -78,27 +96,44 @@ namespace PersonalFramework.Controllers
                 throw ex;
             }
         }
-        public string Edit(FormCollection fc)
+        public ActionResult Edit(FormCollection fc)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
                     var entity = context.Set<T>().Find(fc["ID"]);
-                    if (!EntityExists(entity.ID))
+                    
+                    if (string.IsNullOrEmpty(fc["ID"])&& entity == null)
                     {
-                        return "false";
+                        fc.Remove("ID");
+                        entity = new T();
+                        TryUpdateModel(entity, fc);
+                        context.Set<T>().Add(entity);
+                        context.SaveChanges();
+                        return Json(new { data = "", Status = 200 }, JsonRequestBehavior.DenyGet);
                     }
-                    TryUpdateModel(entity, fc);
-                    context.SaveChanges();
-                    return "true";
+                    else
+                    {
+                        TryUpdateModel(entity, fc);
+                        context.SaveChanges();
+                        return Json(new { data = "", Status = 200 }, JsonRequestBehavior.DenyGet);
+                    }
+                    
                 }
                 catch (DbUpdateConcurrencyException ex)
                 {
-                    return ex.Message;
+                    return Json(new { data = "", Status = 500, Message = ex.Message }, JsonRequestBehavior.DenyGet);
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { data = "", Status = 500, Message = ex.Message }, JsonRequestBehavior.DenyGet);
                 }
             }
-            return "false";
+            else
+            {
+                return Json(new { data = "", Status = 500, Message = "false" }, JsonRequestBehavior.DenyGet);
+            }
         }
         public bool EntityExists(string id)
         {

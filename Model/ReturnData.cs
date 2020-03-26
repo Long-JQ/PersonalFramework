@@ -15,11 +15,11 @@ namespace Model
         /// <summary>
         /// 消息
         /// </summary>
-        public readonly string msg;
+        public readonly string Message;
         /// <summary>
         /// 数据集合
         /// </summary>
-        public readonly string data;
+        public readonly object data;
         /// <summary>
         /// 总条数
         /// </summary>
@@ -32,39 +32,39 @@ namespace Model
         public ReturnData()
         {
             this.code = 200;
-            this.msg = "";
+            this.Message = "";
             this.count = 0;
         }
         public ReturnData(int code)
         {
             this.code = (int)code;
-            this.msg = "";
+            this.Message = "";
             this.count = 0;
         }
-        public ReturnData(int code, string msg)
+        public ReturnData(int code, string Message)
         {
             this.code = (int)code;
-            this.msg = msg;
+            this.Message = Message;
             this.count = 0;
         }
-        public ReturnData(int code, string msg, string data)
+        public ReturnData(int code, string Message, object data)
         {
             this.code = (int)code;
-            this.msg = msg;
+            this.Message = Message;
             this.data = data;
             this.count = 0;
         }
-        public ReturnData(int code, string msg, int count, string data)
+        public ReturnData(int code, string Message, int count, object data)
         {
             this.code = (int)code;
-            this.msg = msg;
+            this.Message = Message;
             this.data = data;
             this.count = count;
         }
-        public ReturnData(int code, string msg, int count, string data, int page)
+        public ReturnData(int code, string Message, int count, object data, int page)
         {
             this.code = (int)code;
-            this.msg = msg;
+            this.Message = Message;
             this.data = data;
             this.count = count;
             this.page = page;

@@ -17,6 +17,41 @@ namespace PersonalFramework.Controllers
     {
         DataContext context = new DataContext();
 
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            base.OnActionExecuting(filterContext);
+            
+            
+            //校验用户是否已经登录
+            //var model = Services.UserLoginHelper.CurrentUser();
+            //if (model != null)
+            //{
+            //    Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(model.ID);
+
+            //    string controllerName = filterContext.RouteData.Values["controller"].ToString().ToLower();
+            //    string actionName = filterContext.RouteData.Values["action"].ToString().ToLower();
+
+            //    string[] needactivecontroller = { "trade", "cfb", "mail" };
+            //    string[] needactiveaction = { "applytransfer" };
+
+            //    if (!Umodel.IsActivation && (needactivecontroller.Contains(controllerName) || needactiveaction.Contains(actionName)))
+            //    {
+            //        Response.Redirect("/AppCenter/User/doPass");
+            //        filterContext.Result = new EmptyResult();
+            //    }
+            //}
+            //else
+            //{
+            //    string controllerName = filterContext.RouteData.Values["controller"].ToString().ToLower();
+            //    if (controllerName == "icomanage") { Response.Redirect("/ico/sign_in"); }
+            //    else
+            //    {
+            //        Response.Redirect("/AppCenter/Login");
+            //        filterContext.Result = new EmptyResult();
+            //    }
+
+            //}
+        }
         public string Add(T entity)
         {
             context.Set<T>().Add(entity);

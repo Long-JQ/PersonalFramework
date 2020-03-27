@@ -13,13 +13,13 @@
 <body id="login">
     <div class="login">
         <h2>QAdmin后台模板</h2>
-        <form class="layui-form" method="post" target="_blank" action="">
+        <form class="layui-form" id="form" method="post" target="_blank">
             <div class="layui-form-item">
-                <input type="username" name="user" placeholder="用户名" class="layui-input">
+                <input type="username" name="keyword" placeholder="用户名" class="layui-input">
                 <i class="layui-icon input-icon">&#xe66f;</i>
             </div>
             <div class="layui-form-item">
-                <input type="password" name="pwd" placeholder="密码" class="layui-input">
+                <input type="password" name="password" placeholder="密码" class="layui-input">
                 <i class="layui-icon input-icon">&#xe673;</i>
             </div>
             <div class="layui-form-item">
@@ -40,21 +40,31 @@
                     $ = layui.jquery;
 
 
-                layer.tips('无需输入,请点击登录进入后台<br/>这个tips可随时去除!', '.layui-btn', {
-                    tips: [3, '#333'],
-                    time: 0
-                });
+                //layer.tips('无需输入,请点击登录进入后台<br/>这个tips可随时去除!', '.layui-btn', {
+                //    tips: [3, '#333'],
+                //    time: 0
+                //});
 
                 form.on('submit(login)', function (data) {
                     sessionStorage.isLgoin = 1; //模拟登录状态,实际使用时请删除掉
 
-                    layer.load({
+                    let load = layer.load({
                         shade: 0.5,
                         time: 0,
                     });
                     setTimeout(function () {
-                        window.location.href = 'index.html';
+                        layer.close(load);
+                        //window.location.href = 'index.html';
                     }, 1000)
+
+                    $.post('@Url.Action("Login")', $('#form').serialize(), function (d) {
+                        if (d.Status == 0) {
+                            layer.msg('登录成功')
+                            location.href = '/user/index';
+                        } else {
+                            layer.msg(d.Message)
+                        }
+                    }, 'json')
 
                     return false;
                 });

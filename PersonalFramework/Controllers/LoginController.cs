@@ -1,4 +1,5 @@
-﻿using PersonalFramework.Tool;
+﻿using Model;
+using PersonalFramework.Tool;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,53 +14,42 @@ namespace PersonalFramework.Controllers
 {
     public class LoginController : Controller
     {
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            base.OnActionExecuting(filterContext);
-            string token = "";
-            HttpCookie cookie = System.Web.HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
-            if (cookie != null)
-            {
-                token = cookie.Value;
-            }
-            else
-            {
-                var headers = System.Web.HttpContext.Current.Request.Headers["Authorization"];
-                if (!string.IsNullOrEmpty(headers))
-                {
-                    token = headers;
-                }
-            }
-            
-            var currentUser = LoginHelper.GetUser(token);
-            if (currentUser == null)
-            {
+        //protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        //{
+        //    base.OnActionExecuting(filterContext);
 
-            }
-        }
+            
+        //    var currentUser = LoginHelper.CurrentUser();
+        //    if (currentUser == null)
+        //    {
+
+        //    }
+        //}
         public ActionResult Index()
         {
             return View();
         }
         public string Login(string keyword, string password)
         {
-            var userService = new Context.DataContext();
-            var account = userService.Users.First(a => a.UserName == keyword.Trim());
-            if (account != null)
+            try
             {
-                var result = DeCrypt.VerifyPassWord(account.Password, password, account.Salt);
-                if (!result)
+                var userService = new Context.DataContext();
+                var account = LoginHelper.UserLogin(keyword, password);
+                if (account == null)
                 {
-                    return null;
+                    ReturnData result = new ReturnData(500,"登录失败");
+                    return result.ToJson();
                 }
-                string token = Guid.NewGuid().ToString("N");
-                Session[token] = account;
-                var EncryptToken = LoginHelper.Login(account.Token);
-                return EncryptToken;
+                else
+                {
+                    ReturnData result = new ReturnData(0);
+                    return result.ToJson();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return null;
+
+                return ex.Message;
             }
         }
     }

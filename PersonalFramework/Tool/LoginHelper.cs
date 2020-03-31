@@ -23,10 +23,10 @@ namespace PersonalFramework.Tool
         public static User UserLogin(string keyword, string password)
         {
             var userService = new Context.DataContext();
-            var account = userService.Users.Find(keyword.Trim());
+            var account = userService.Users.Where(x => x.UserName == keyword.Trim()).FirstOrDefault();
             if (account != null)
             {
-                var result = DeCrypt.VerifyPassWord(account.Password, password, account.Salt);
+                var result = DeCrypt.VerifyPassWord(password, account.Password, account.Salt);
                 if (!result)
                 {
                     return null;

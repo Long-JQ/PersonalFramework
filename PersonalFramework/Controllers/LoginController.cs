@@ -42,7 +42,7 @@ namespace PersonalFramework.Controllers
                 }
                 else
                 {
-                    ReturnData result = new ReturnData(0);
+                    ReturnData result = new ReturnData(0,"登录成功");
                     return result.ToJson();
                 }
             }
@@ -51,6 +51,12 @@ namespace PersonalFramework.Controllers
 
                 return ex.Message;
             }
+        }
+
+        public ActionResult LoginOut()
+        {
+            LoginHelper.UserLogout();
+            return RedirectToAction("index");
         }
     }
 }

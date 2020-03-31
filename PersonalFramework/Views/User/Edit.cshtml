@@ -21,22 +21,31 @@
         <legend>编辑信息</legend>
     </fieldset>
 
-    <form class="layui-form" action="">
+    <form id="form" class="layui-form">
         <input name="ID" value="@Model.ID" hidden />
         <div class="layui-form-item">
             <label class="layui-form-label">用户名</label>
-            <div class="layui-input-block">
-                <input type="text" name="UserName" autocomplete="off" placeholder="请输入用户名" class="layui-input">
+            <div class="layui-input-inline">
+                <input type="text" name="UserName" autocomplete="off" placeholder="请输入用户名" class="layui-input" value="@Model.UserName">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">角色</label>
-            <div class="layui-input-block">
+            <div class="layui-input-inline">
                 <select name="RoleID" lay-verify="required">
+                    <option value="">请选择</option>
                     @{
                         foreach (var item in list)
                         {
-                            <option value="@item.ID">@item.RoleName</option>
+                            if (item.ID == Model.RoleID)
+                            {
+                                <option value="@item.ID" selected>@item.RoleName</option>
+                            }
+                            else
+                            {
+                                <option value="@item.ID">@item.RoleName</option>
+                            }
+
                         }
                     }
                 </select>
@@ -67,13 +76,13 @@
 
             //监听提交
             form.on('submit(demo1)', function (data) {
-                layer.alert(JSON.stringify(data.field), {
-                    title: '最终的提交信息'
-                })
-                 $.post('@Url.Action("Activation")', $('#form').serialize(), function (d) {
+                //layer.alert(JSON.stringify(data.field), {
+                //    title: '最终的提交信息'
+                //})
+                 $.post('@Url.Action("Edit")', $('#form').serialize(), function (d) {
                     if (d.Status == 200) {
                         layer.msg('提交成功')
-                        location.href = '/appcenter/user/index';
+                        location.href = '@Url.Action("index")';
                     } else {
                         layer.msg(d.Message)
                     }

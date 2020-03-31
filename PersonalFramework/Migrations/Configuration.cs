@@ -14,9 +14,11 @@
 
         protected override void Seed(PersonalFramework.DataContext context)
         {
-            context.Roles.Add(new Model.Role { RoleName = "1" });
-            context.Roles.Add(new Model.Role { RoleName = "2" });
-            context.Roles.Add(new Model.Role { RoleName = "3" });
+            context.Roles.Add(new Model.Role { RoleName = "角色1" });
+            context.Roles.Add(new Model.Role { RoleName = "角色2" });
+            context.Roles.Add(new Model.Role { RoleName = "角色3" });
+
+            context.Users.Add(new Model.User { UserName = "角色3", RoleName = "角色3",Password="123" });
             //  This method will be called after migrating to the latest version.
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method

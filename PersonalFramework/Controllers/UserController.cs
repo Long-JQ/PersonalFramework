@@ -22,11 +22,11 @@ namespace PersonalFramework.Controllers
         //    return View();
         //}
         [HttpGet]
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(string id)
         {
-            if (id.HasValue)
+            if (!string.IsNullOrEmpty(id))
             {
-                var entity = Get(id.ToString());
+                var entity = GetEntity(id.ToString());
                 return View(entity);
             }
             else

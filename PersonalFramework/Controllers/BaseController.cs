@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using PersonalFramework.Tool;
 
 namespace PersonalFramework.Controllers
 {
@@ -20,37 +21,37 @@ namespace PersonalFramework.Controllers
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
-            
-            
+
+
             //校验用户是否已经登录
-            //var model = Services.UserLoginHelper.CurrentUser();
-            //if (model != null)
-            //{
-            //    Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(model.ID);
+            var model = LoginHelper.CurrentUser();
+            if (model != null)
+            {
+                //Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(model.ID);
 
-            //    string controllerName = filterContext.RouteData.Values["controller"].ToString().ToLower();
-            //    string actionName = filterContext.RouteData.Values["action"].ToString().ToLower();
+                //string controllerName = filterContext.RouteData.Values["controller"].ToString().ToLower();
+                //string actionName = filterContext.RouteData.Values["action"].ToString().ToLower();
 
-            //    string[] needactivecontroller = { "trade", "cfb", "mail" };
-            //    string[] needactiveaction = { "applytransfer" };
+                //string[] needactivecontroller = { "trade", "cfb", "mail" };
+                //string[] needactiveaction = { "applytransfer" };
 
-            //    if (!Umodel.IsActivation && (needactivecontroller.Contains(controllerName) || needactiveaction.Contains(actionName)))
-            //    {
-            //        Response.Redirect("/AppCenter/User/doPass");
-            //        filterContext.Result = new EmptyResult();
-            //    }
-            //}
-            //else
-            //{
-            //    string controllerName = filterContext.RouteData.Values["controller"].ToString().ToLower();
-            //    if (controllerName == "icomanage") { Response.Redirect("/ico/sign_in"); }
-            //    else
-            //    {
-            //        Response.Redirect("/AppCenter/Login");
-            //        filterContext.Result = new EmptyResult();
-            //    }
+                //if (!Umodel.IsActivation && (needactivecontroller.Contains(controllerName) || needactiveaction.Contains(actionName)))
+                //{
+                //    Response.Redirect("/AppCenter/User/doPass");
+                //    filterContext.Result = new EmptyResult();
+                //}
+            }
+            else
+            {
+                string controllerName = filterContext.RouteData.Values["controller"].ToString().ToLower();
+                if (controllerName == "icomanage") { Response.Redirect("/ico/sign_in"); }
+                else
+                {
+                    Response.Redirect("/Login/index");
+                    filterContext.Result = new EmptyResult();
+                }
 
-            //}
+            }
         }
         public string Add(T entity)
         {
@@ -76,7 +77,7 @@ namespace PersonalFramework.Controllers
             {
                 context.Set<T>().Remove(entity);
                 context.SaveChangesAsync();
-                ReturnData result = new ReturnData(0);
+                ReturnData result = new ReturnData(0,"删除成功");
                 return result.ToJson();
             }
             catch (Exception ex)

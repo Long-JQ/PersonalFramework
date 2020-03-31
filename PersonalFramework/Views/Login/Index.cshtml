@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>管理员登陆 - QAdmin后台模板</title>
+    <title>管理员登陆</title>
     <link href="~/Content/layui/css/layui.css" rel="stylesheet" />
     <link href="~/Content/Css/login.css" rel="stylesheet" />
     <script src="~/Content/layui/layui.js"></script>
@@ -12,7 +12,7 @@
 
 <body id="login">
     <div class="login">
-        <h2>QAdmin后台模板</h2>
+        <h2>后台登录</h2>
         <form class="layui-form" id="form" method="post" target="_blank">
             <div class="layui-form-item">
                 <input type="username" name="keyword" placeholder="用户名" class="layui-input">
@@ -22,9 +22,9 @@
                 <input type="password" name="password" placeholder="密码" class="layui-input">
                 <i class="layui-icon input-icon">&#xe673;</i>
             </div>
-            <div class="layui-form-item">
+            @*<div class="layui-form-item">
                 <input type="checkbox" name="box" lay-skin="primary" title="记住密码" checked=""> <a class="back" href="javascript:;" style="margin-top: 10px">忘记密码</a>
-            </div>
+            </div>*@
             <div class="layui-form-item">
                 <button style="width: 100%" class="layui-btn" lay-submit lay-filter="login">立即登录</button>
 
@@ -52,17 +52,19 @@
                         shade: 0.5,
                         time: 0,
                     });
-                    setTimeout(function () {
-                        layer.close(load);
-                        //window.location.href = 'index.html';
-                    }, 1000)
+                    //setTimeout(function () {
+                    //    layer.close(load);
+                    //    //window.location.href = 'index.html';
+                    //}, 1000)
 
                     $.post('@Url.Action("Login")', $('#form').serialize(), function (d) {
-                        if (d.Status == 0) {
-                            layer.msg('登录成功')
+                        if (d.code == 0) {
+                            layer.msg('登录成功');
+                            layer.close(load);
                             location.href = '/user/index';
                         } else {
-                            layer.msg(d.Message)
+                            layer.msg(d.Message);
+                            layer.close(load);
                         }
                     }, 'json')
 

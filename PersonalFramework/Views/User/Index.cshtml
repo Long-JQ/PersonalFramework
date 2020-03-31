@@ -46,26 +46,24 @@
                     obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
                     layer.close(index);
                     //向服务端发送删除指令
-                    @*$.post('@Url.Action("Activation")', $('#form').serialize(), function (d) {
+                    $.post('@Url.Action("Delete")', { "id": obj.data["ID"]}, function (d) {
                         if (d.Status == 200) {
-                            layer.msg('@T("激活成功")')
-                            location.href = '/appcenter/user/index';
+                            layer.msg('删除成功')
+                            location.href = '@Url.Action("index")';
                         } else {
                             layer.msg(d.Message)
                         }
-                    }, 'json')*@
+                    }, 'json')
                 });
             } else if (layEvent === 'edit') { //编辑
                 //do something
-                alert("11");
+                location.href = '/user/edit?id=' + obj.data["ID"];
                 //同步更新缓存对应的值
-                obj.update({
-                    UserName: '123'
-                    , title: 'xxx'
-                });
-            } else if (layEvent === 'detail') { //新增
-                location.href = '/user/edit';
-            }
+                //obj.update({
+                //    UserName: '123'
+                //    , title: 'xxx'
+                //});
+            } 
         });
 
 

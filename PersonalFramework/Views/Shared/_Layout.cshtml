@@ -1,5 +1,7 @@
 ﻿@{ 
     string url = Request.Url.ToString().ToLower();
+    var user = PersonalFramework.Tool.LoginHelper.CurrentUser();
+    var name = user != null ? user.UserName : "贤心";
 }
 <!DOCTYPE html>
 <html>
@@ -35,14 +37,14 @@
                 <li class="layui-nav-item">
                     <a href="javascript:;">
                         <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
-                        贤心
+                        @name
                     </a>
                     <dl class="layui-nav-child">
                         <dd><a href="">基本资料</a></dd>
                         <dd><a href="">安全设置</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item"><a href="">退了</a></li>
+                <li class="layui-nav-item"><a href="@Url.Action("LoginOut", "login")">退了</a></li>
             </ul>
         </div>
 
@@ -83,6 +85,11 @@
     @*<script src="//res.layui.com/layui/dist/layui.js" charset="utf-8"></script>*@
     
     <script>
+        function exit() {
+            layer.confirm("确定退出登录?", "确认", function () {
+                 location.href = "@(Url.Action("LoginOut", "login"))";
+            });
+        }
         //JavaScript代码区域
         layui.use('element', function () {
             var element = layui.element;

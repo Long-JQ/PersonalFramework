@@ -5,14 +5,14 @@
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<PersonalFramework.DataContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Model.DataContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
         }
 
-        protected override void Seed(PersonalFramework.DataContext context)
+        protected override void Seed(Model.DataContext context)
         {
             context.Roles.Add(new Model.Role { RoleName = "角色1" });
             context.Roles.Add(new Model.Role { RoleName = "角色2" });

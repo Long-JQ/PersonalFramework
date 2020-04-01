@@ -1,12 +1,11 @@
 ﻿using Model;
-using PersonalFramework.Context;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Security.Principal;
 using System.Web;
-using System.Web.Mvc;
+//using System.Web.Mvc;
 using System.Web.Security;
 
 namespace PersonalFramework.Tool
@@ -22,7 +21,7 @@ namespace PersonalFramework.Tool
 
         public static User UserLogin(string keyword, string password)
         {
-            var userService = new Context.DataContext();
+            var userService = new DataContext();
             var account = userService.Users.Where(x => x.UserName == keyword.Trim()).FirstOrDefault();
             if (account != null)
             {

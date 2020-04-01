@@ -30,6 +30,16 @@ namespace Model
         public User()
         {
             LastLoginTime = DateTime.Now;
+            Salt = SetSalt();
+
+        }
+        public static string SetSalt()
+        {
+            Random rnd = new Random();
+            byte[] salt = new byte[6];
+            rnd.NextBytes(salt);
+            return Convert.ToBase64String(salt);
+
         }
     }
 }

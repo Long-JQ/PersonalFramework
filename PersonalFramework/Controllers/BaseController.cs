@@ -24,7 +24,7 @@ namespace PersonalFramework.Controllers
 
 
             //校验用户是否已经登录
-            var model = LoginHelper.CurrentUser();
+            var model = PersonalFramework.Tool.LoginHelper.CurrentUser();
             if (model != null)
             {
                 //Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(model.ID);

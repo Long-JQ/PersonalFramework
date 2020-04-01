@@ -36,27 +36,44 @@ namespace PersonalFramework.Controllers
                 return View(entity);
             }
         }
-        //[HttpPost]
-        //public ActionResult Edit(FormCollection fc)
-        //{
-        //    return View();
-        //}
-        //public ActionResult List(int? page, int? limit)
-        //{
-        //    var a = new User();
-        //    var b = new User();
-        //    a.RoleName = "1";
-        //    a.UserName = "2";
-        //    b = (User)DeepCopyObject(a);
-        //    a.RoleName = "2";
-        //    var list = new List<User>();
-        //    list.Add(a);
-        //    list.Add(a);
-        //    list.Add(a);
-        //    var listdata = list.ToPagedList(page ?? 1, limit ?? 1);//取数据
-        //    return Json(new { data = list, code = 0, msg = "", count = list.Count() }, JsonRequestBehavior.AllowGet);
-        //}
+        public new ActionResult Edit(FormCollection fc)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var entity = context.Set<User>().Find(fc["ID"]);
 
-        
+                    if (string.IsNullOrEmpty(fc["ID"]) && entity == null)
+                    {
+                        fc.Remove("ID");
+                        entity = new User();
+                        TryUpdateModel(entity, fc);
+                        context.Set<User>().Add(entity);
+                        context.SaveChanges();
+                        return Json(new { data = "", Status = 200 }, JsonRequestBehavior.DenyGet);
+                    }
+                    else
+                    {
+                        TryUpdateModel(entity, fc);
+                        entity.Password = PersonalFramework.Tool.DeCrypt.SetPassWord(entity.Password, entity.Salt);
+                        context.SaveChanges();
+                        return Json(new { data = "", Status = 200 }, JsonRequestBehavior.DenyGet);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { data = "", Status = 500, Message = ex.Message }, JsonRequestBehavior.DenyGet);
+                }
+            }
+            else
+            {
+                return Json(new { data = "", Status = 500, Message = "false" }, JsonRequestBehavior.DenyGet);
+            }
+
+
+        }
+
     }
 }

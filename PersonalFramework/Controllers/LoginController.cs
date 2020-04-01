@@ -33,7 +33,6 @@ namespace PersonalFramework.Controllers
         {
             try
             {
-                var userService = new Context.DataContext();
                 var account = LoginHelper.UserLogin(keyword, password);
                 if (account == null)
                 {

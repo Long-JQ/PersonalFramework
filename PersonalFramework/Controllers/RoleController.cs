@@ -16,6 +16,10 @@ namespace PersonalFramework.Controllers
     public class RoleController : BaseController<Role>
     {
         DataContext context = new DataContext();
+        /// <summary>
+        /// 大赛的大师大大声道
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             return View();

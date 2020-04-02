@@ -9,7 +9,7 @@ using System.Web;
 //using System.Web.Mvc;
 using System.Web.Security;
 
-namespace PersonalFramework.Tool
+namespace PersonalFramework.Service
 {
     public class LoginHelperByCookies
     {
@@ -68,7 +68,7 @@ namespace PersonalFramework.Tool
                 DateTime.Now,
                 DateTime.Now.AddDays(1),
                 false,
-                Tool.IPHelper.GetClientIp()
+                Service.IPHelper.GetClientIp()
 
                 );
 

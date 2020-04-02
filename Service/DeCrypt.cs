@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PersonalFramework.Tool
+namespace PersonalFramework.Service
 {
     public static class DeCrypt
     {

@@ -10,7 +10,7 @@ using System.Web.Mvc;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
-using PersonalFramework.Tool;
+using PersonalFramework.Service;
 
 namespace PersonalFramework.Controllers
 {
@@ -24,7 +24,7 @@ namespace PersonalFramework.Controllers
 
 
             //校验用户是否已经登录
-            var model = PersonalFramework.Tool.LoginHelper.CurrentUser();
+            var model = PersonalFramework.Service.LoginHelper.CurrentUser();
             if (model != null)
             {
                 //Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(model.ID);

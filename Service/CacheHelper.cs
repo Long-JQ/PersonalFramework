@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Caching;
 
-namespace PersonalFramework.Tool
+namespace PersonalFramework.Service
 {
     public class CacheHelper
     {

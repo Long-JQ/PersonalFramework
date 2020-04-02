@@ -1,5 +1,5 @@
 ﻿using Model;
-using PersonalFramework.Tool;
+using PersonalFramework.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,7 +51,11 @@ namespace PersonalFramework.Controllers
                 return ex.Message;
             }
         }
-
+        [System.ComponentModel.DescriptionAttribute("啊飒飒大王的")]
+        /// <summary>
+        /// 啊飒飒大王的
+        /// </summary>
+        /// <returns></returns>
         public ActionResult LoginOut()
         {
             LoginHelper.UserLogout();

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 
-namespace PersonalFramework.Tool
+namespace PersonalFramework.Service
 {
     public class IPHelper
     {

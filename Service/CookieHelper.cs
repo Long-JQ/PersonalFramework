@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace PersonalFramework.Tool
+namespace PersonalFramework.Service
 {
     public static class CookieHelper
     {

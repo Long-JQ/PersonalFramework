@@ -1,6 +1,12 @@
 ﻿@{ 
+    Model.User Umodel = null;
+    if (PersonalFramework.Service.LoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+
     string url = Request.Url.ToString().ToLower();
-    var user = PersonalFramework.Tool.LoginHelper.CurrentUser();
+    var user = PersonalFramework.Service.LoginHelper.CurrentUser();
     var name = user != null ? user.UserName : "贤心";
 }
 <!DOCTYPE html>

@@ -56,7 +56,7 @@ namespace PersonalFramework.Controllers
                     else
                     {
                         TryUpdateModel(entity, fc);
-                        entity.Password = PersonalFramework.Tool.DeCrypt.SetPassWord(entity.Password, entity.Salt);
+                        entity.Password = PersonalFramework.Service.DeCrypt.SetPassWord(entity.Password, entity.Salt);
                         context.SaveChanges();
                         return Json(new { data = "", Status = 200 }, JsonRequestBehavior.DenyGet);
                     }

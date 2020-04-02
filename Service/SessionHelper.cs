@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 //using System.Web.Mvc;
 
-namespace PersonalFramework.Tool
+namespace PersonalFramework.Service
 {
     public class SessionHelper<T>
     {

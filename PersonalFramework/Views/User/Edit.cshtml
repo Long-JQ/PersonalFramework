@@ -1,7 +1,7 @@
 ﻿@model Model.User
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    DataContext context = new DataContext();
+    Model.DataContext context = new Model.DataContext();
     var list = context.Roles.ToList();
 }
 

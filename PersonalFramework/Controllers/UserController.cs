@@ -49,6 +49,8 @@ namespace PersonalFramework.Controllers
                         fc.Remove("ID");
                         entity = new User();
                         TryUpdateModel(entity, fc);
+                        entity.Salt = PersonalFramework.Service.DeCrypt.SetSalt();
+                        entity.Password = PersonalFramework.Service.DeCrypt.SetPassWord(entity.Password, entity.Salt);
                         context.Set<User>().Add(entity);
                         context.SaveChanges();
                         return Json(new { data = "", Status = 200 }, JsonRequestBehavior.DenyGet);

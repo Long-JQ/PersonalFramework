@@ -18,26 +18,26 @@
         //第一个实例
         table.render({
             elem: '#dataTable'
-            , url: '/role/list' //数据接口
+            , url: '/notice/list' //数据接口
             , page: true //开启分页
             , toolbar: '#headtool'
             , cols: [[ //表头
                 { type: 'checkbox', fixed: 'left' }
                 , { field: 'ID', title: 'ID', sort: true, fixed: 'left' }
-                , { field: 'RoleName', title: '角色名' }
+                , { field: 'Title', title: '标题' }
                 , { field: 'SortCode', title: '排序码', sort: true }
                 , { fixed: 'right', width: 165, align: 'center', toolbar: '#toolbox' }
             ]]
         });
 
-        table.on('tool(tableFilter)', function (obj) { //注：tool 是工具条事件名，tableFilter 是 table 原始容器的属性 lay-filter="对应的值"
+        table.on('tool(tableFilter)', function (obj) {
             var data = obj.data; //获得当前行数据
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
             var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
 
             if (layEvent === 'del') { //删除
                 layer.confirm('真的删除行么', function (index) {
-                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    obj.del(); 
                     layer.close(index);
                     //向服务端发送删除指令
                     $.post('@Url.Action("Delete")', { "id": obj.data["ID"]}, function (d) {
@@ -50,16 +50,9 @@
                     }, 'json')
                 });
             } else if (layEvent === 'edit') { //编辑
-                //do something
-                location.href = '/role/edit?id=' + obj.data["ID"];
-                //alert(obj);
-                //同步更新缓存对应的值
-                //obj.update({
-                //    UserName: '123'
-                //    , title: 'xxx'
-                //});
+                location.href = '/notice/edit?id=' + obj.data["ID"];
             } else if (layEvent === 'add') { //新增
-                location.href = '/role/edit';
+                location.href = '/notice/edit';
             }
         });
 

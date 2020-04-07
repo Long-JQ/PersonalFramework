@@ -1,8 +1,7 @@
-﻿@model Model.Role
+﻿@model Model.Notice
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,8 +10,6 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    @*<link rel="stylesheet" href="//res.layui.com/layui/dist/css/layui.css" media="all">*@
-    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
 <body>
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
@@ -20,27 +17,29 @@
     </fieldset>
 
     <form id="form" class="layui-form">
-        <input name="ID" value="@Model.ID" hidden/>
+        <input name="ID" value="@Model.ID" hidden />
         <div class="layui-form-item">
-            <label class="layui-form-label">角色名</label>
+            <label class="layui-form-label">标题</label>
             <div class="layui-input-block">
-                <input type="text" name="RoleName" autocomplete="off" placeholder="请输入角色名" class="layui-input" value="@Model.RoleName">
+                <input type="text" name="Title" autocomplete="off" placeholder="请输入标题" class="layui-input" value="@Model.Title">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-block">
+                <textarea name="Content" id="Content" style="display: none;">@Model.Content</textarea>
             </div>
         </div>
 
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="submitBtn">立即提交</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
     </form>
 
 
-
-
-
-    @*<script src="//res.layui.com/layui/dist/layui.js" charset="utf-8"></script>*@
     <script>
         layui.use(['form', 'layedit', 'laydate'], function () {
             var form = layui.form
@@ -48,13 +47,22 @@
                 , layedit = layui.layedit
                 , laydate = layui.laydate;
 
+            var editbox = layedit.build('Content'); //建立编辑器
 
             //监听提交
-            form.on('submit(demo1)', function (data) {
+            form.on('submit(submitBtn)', function (data) {
+                data.field.Content = layedit.getContent(editbox);
+
+                var form = document.getElementById("form");
+                // 用表单来初始化
+                var formData = new FormData(form);
                 //layer.alert(JSON.stringify(data.field), {
                 //    title: '最终的提交信息'
                 //})
-                 $.post('@Url.Action("Edit")', $('#form').serialize(), function (d) {
+                $("#Content").html(data.field.Content);
+                //formData.append("Content", data.field.Content);
+                //var a = JSON.parse(JSON.stringify(data.field));
+                $.post('@Url.Action("Edit")', $('#form').serialize(), function (d) {
                     if (d.Status == 200) {
                         layer.msg('提交成功')
                         location.href = '@Url.Action("index")';

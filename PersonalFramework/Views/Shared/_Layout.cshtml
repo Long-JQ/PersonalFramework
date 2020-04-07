@@ -62,18 +62,30 @@
                         <a class="" href="javascript:;">用户</a>
                         <dl class="layui-nav-child">
                             <dd class="@(url.Contains("/user/index") ? "layui-this" : "")"><a href="/user/index">列表</a></dd>
-                            <dd class="@(url.Contains("/user/edit") ? "layui-this" : "")"><a href="@Url.Action("Edit","User")">编辑</a></dd>
+                            <dd class="@(url.Contains("/user/edit") ? "layui-this" : "")"><a href="@Url.Action("edit","user")">编辑</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item @(url.Contains("/role") ? "layui-nav-itemed" : "")">
                         <a class="" href="javascript:;">角色</a>
                         <dl class="layui-nav-child">
                             <dd class="@(url.Contains("/role/index") ? "layui-this" : "")"><a href="/role/index">列表</a></dd>
-                            <dd class="@(url.Contains("/role/edit") ? "layui-this" : "")"><a href="@Url.Action("Edit","Role")">编辑</a></dd>
+                            <dd class="@(url.Contains("/role/edit") ? "layui-this" : "")"><a href="@Url.Action("edit","role")">编辑</a></dd>
                         </dl>
                     </li>
-                    <li class="layui-nav-item"><a href="">云市场</a></li>
-                    <li class="layui-nav-item"><a href="">发布商品</a></li>
+                    <li class="layui-nav-item @(url.Contains("/notice") ? "layui-nav-itemed" : "")">
+                        <a class="" href="javascript:;">公告</a>
+                        <dl class="layui-nav-child">
+                            <dd class="@(url.Contains("/notice/index") ? "layui-this" : "")"><a href="/notice/index">列表</a></dd>
+                            <dd class="@(url.Contains("/notice/edit") ? "layui-this" : "")"><a href="@Url.Action("edit","notice")">编辑</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item @(url.Contains("/article") ? "layui-nav-itemed" : "")">
+                        <a class="" href="javascript:;">文章</a>
+                        <dl class="layui-nav-child">
+                            <dd class="@(url.Contains("/article/index") ? "layui-this" : "")"><a href="/article/index">列表</a></dd>
+                            <dd class="@(url.Contains("/article/edit") ? "layui-this" : "")"><a href="@Url.Action("edit","article")">编辑</a></dd>
+                        </dl>
+                    </li>
                 </ul>
             </div>
         </div>

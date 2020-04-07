@@ -13,6 +13,7 @@ namespace Model
         [StringLength(250)]
         public string UserName { get; set; }
         [StringLength(250)]
+        [Required(ErrorMessage = "请输入您的密码")]
         public string Password { get; set; }
         [StringLength(250)]
         public string Password2 { get; set; }

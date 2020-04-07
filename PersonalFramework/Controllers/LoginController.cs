@@ -47,8 +47,8 @@ namespace PersonalFramework.Controllers
             }
             catch (Exception ex)
             {
-
-                return ex.Message;
+                ReturnData result = new ReturnData(500, ex.Message);
+                return result.ToJson();
             }
         }
         [System.ComponentModel.DescriptionAttribute("啊飒飒大王的")]

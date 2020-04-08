@@ -47,6 +47,12 @@
                 , layedit = layui.layedit
                 , laydate = layui.laydate;
 
+            layedit.set({
+                uploadImage: {
+                    url: '@Url.Action("UploadFile")'
+                    , type: 'post'
+                }
+            });
             var editbox = layedit.build('Content'); //建立编辑器
 
             //监听提交
@@ -63,7 +69,7 @@
                 //formData.append("Content", data.field.Content);
                 //var a = JSON.parse(JSON.stringify(data.field));
                 $.post('@Url.Action("Edit")', $('#form').serialize(), function (d) {
-                    if (d.Status == 200) {
+                    if (d.code == 200) {
                         layer.msg('提交成功')
                         location.href = '@Url.Action("index")';
                     } else {

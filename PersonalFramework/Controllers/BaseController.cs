@@ -11,6 +11,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using PersonalFramework.Service;
+using System.Web;
 
 namespace PersonalFramework.Controllers
 {
@@ -53,12 +54,22 @@ namespace PersonalFramework.Controllers
 
             }
         }
+        /// <summary>
+        /// 通用新增
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public string Add(T entity)
         {
             context.Set<T>().Add(entity);
             context.SaveChanges();
             return "true";
         }
+        /// <summary>
+        /// 通用删除
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public string Delete(string id)
         {
             if (id == null)
@@ -86,7 +97,11 @@ namespace PersonalFramework.Controllers
                 return result.ToJson();
             }
         }
-        
+        /// <summary>
+        /// 通用实体检查
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public string Get(string id)
         {
             if (id == null)
@@ -101,6 +116,11 @@ namespace PersonalFramework.Controllers
 
             return entity.ToJson();
         }
+        /// <summary>
+        /// 通用单个查询
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public T GetEntity(string id)
         {
             if (id == null)
@@ -115,6 +135,11 @@ namespace PersonalFramework.Controllers
 
             return entity;
         }
+        /// <summary>
+        /// 通用列表集合查询
+        /// </summary>
+        /// <param name="pagination"></param>
+        /// <returns></returns>
         public string List(Pagination pagination)
         {
             try
@@ -132,7 +157,12 @@ namespace PersonalFramework.Controllers
                 throw ex;
             }
         }
-        public ActionResult Edit(FormCollection fc)
+        /// <summary>
+        /// 通用编辑与新增
+        /// </summary>
+        /// <param name="fc"></param>
+        /// <returns></returns>
+        public virtual string Edit(FormCollection fc)
         {
             if (ModelState.IsValid)
             {
@@ -147,36 +177,60 @@ namespace PersonalFramework.Controllers
                         TryUpdateModel(entity, fc);
                         context.Set<T>().Add(entity);
                         context.SaveChanges();
-                        return Json(new { data = "", Status = 200 }, JsonRequestBehavior.DenyGet);
+                        ReturnData result = new ReturnData(200, "编辑成功");
+                        return result.ToJson();
                     }
                     else
                     {
                         TryUpdateModel(entity, fc);
                         context.SaveChanges();
-                        return Json(new { data = "", Status = 200 }, JsonRequestBehavior.DenyGet);
+                        ReturnData result = new ReturnData(200, "编辑成功");
+                        return result.ToJson();
                     }
                     
                 }
                 catch (DbUpdateConcurrencyException ex)
                 {
-                    return Json(new { data = "", Status = 500, Message = ex.Message }, JsonRequestBehavior.DenyGet);
+                    ReturnData result = new ReturnData(500, ex.Message);
+                    return result.ToJson();
                 }
                 catch (Exception ex)
                 {
-                    return Json(new { data = "", Status = 500, Message = ex.Message }, JsonRequestBehavior.DenyGet);
+                    ReturnData result = new ReturnData(500, ex.Message);
+                    return result.ToJson();
                 }
             }
             else
             {
-                return Json(new { data = "", Status = 500, Message = "false" }, JsonRequestBehavior.DenyGet);
+                ReturnData result = new ReturnData(500, "false");
+                return result.ToJson();
             }
         }
         public bool EntityExists(string id)
         {
             return context.Set<T>().Any(e => e.ID == id);
         }
+        public ActionResult UploadFile(HttpPostedFileBase file)
+        {
+            try
+            {
+                HttpPostedFileBase imgFile = Request.Files["imgFile"];
+                string oldLogo = "/Upload/";
 
-
+                string img = UploadPic.MvcUpload(file, new string[] { ".png", ".gif", ".jpg" }, 1, System.Web.HttpContext.Current.Server.MapPath(oldLogo));
+                img = ".." + oldLogo + img;
+                return Json(new { data = new { src = img }, code = 0, msg = "成功" }, JsonRequestBehavior.DenyGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { data = new { src = "" }, code = 500, msg = "上传失败" }, JsonRequestBehavior.DenyGet);
+            }
+        }
+        /// <summary>
+        /// 引用类型实体复制
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public static object DeepCopyObject(object obj)
         {
             BinaryFormatter Formatter = new BinaryFormatter(null,

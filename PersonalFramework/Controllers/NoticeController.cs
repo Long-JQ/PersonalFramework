@@ -32,7 +32,12 @@ namespace PersonalFramework.Controllers
                 return View(entity);
             }
         }
-        
-        
+        [ValidateInput(false)]
+        public override string Edit(FormCollection fc)
+        {
+            var result = base.Edit(fc);
+            return result;
+        }
+
     }
 }

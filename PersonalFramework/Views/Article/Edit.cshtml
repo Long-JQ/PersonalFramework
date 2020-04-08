@@ -48,9 +48,13 @@
                 //    title: '最终的提交信息'
                 //})
                  $.post('@Url.Action("Edit")', $('#form').serialize(), function (d) {
-                    if (d.Status == 200) {
-                        layer.msg('提交成功')
-                        location.href = '@Url.Action("index")';
+                    if (d.code == 200) {
+                        layer.msg('提交成功', {
+                            time: 1000,
+                            end: function () {
+                                location.href = '@Url.Action("index")';
+                            }
+                        })
                     } else {
                         layer.msg(d.Message)
                     }

@@ -13,14 +13,12 @@ namespace PersonalFramework.Controllers
     public class UserController : BaseController<User>
     {
         DataContext context = new DataContext();
+        [System.ComponentModel.DescriptionAttribute("用户列表页")]
         public ActionResult Index()
         {
             return View();
         }
-        //public ActionResult Delete(int id)
-        //{
-        //    return View();
-        //}
+        [System.ComponentModel.DescriptionAttribute("用户编辑页")]
         [HttpGet]
         public ActionResult Edit(string id)
         {
@@ -36,6 +34,7 @@ namespace PersonalFramework.Controllers
                 return View(entity);
             }
         }
+        [System.ComponentModel.DescriptionAttribute("用户编辑提交")]
         public new ActionResult Edit(FormCollection fc)
         {
             if (ModelState.IsValid)

@@ -13,10 +13,12 @@ namespace PersonalFramework.Controllers
     public class ArticleClassController : BaseController<ArticleClass>
     {
         DataContext context = new DataContext();
+        [System.ComponentModel.DescriptionAttribute("文章分类列表页")]
         public ActionResult Index()
         {
             return View();
         }
+        [System.ComponentModel.DescriptionAttribute("文章分类编辑页")]
         [HttpGet]
         public ActionResult Edit(string id)
         {

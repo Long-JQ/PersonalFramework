@@ -14,26 +14,17 @@ namespace PersonalFramework.Controllers
 {
     public class LoginController : Controller
     {
-        //protected override void OnActionExecuting(ActionExecutingContext filterContext)
-        //{
-        //    base.OnActionExecuting(filterContext);
-
-            
-        //    var currentUser = LoginHelper.CurrentUser();
-        //    if (currentUser == null)
-        //    {
-
-        //    }
-        //}
+        [System.ComponentModel.DescriptionAttribute("登录页")]
         public ActionResult Index()
         {
             return View();
         }
+        [System.ComponentModel.DescriptionAttribute("登录")]
         public string Login(string keyword, string password)
         {
             try
             {
-                var account = LoginHelper.UserLogin(keyword, password);
+                var account = UserLoginHelper.UserLogin(keyword, password);
                 if (account == null)
                 {
                     ReturnData result = new ReturnData(500,"登录失败");
@@ -51,14 +42,14 @@ namespace PersonalFramework.Controllers
                 return result.ToJson();
             }
         }
-        [System.ComponentModel.DescriptionAttribute("啊飒飒大王的")]
+        [System.ComponentModel.DescriptionAttribute("退出登录")]
         /// <summary>
         /// 啊飒飒大王的
         /// </summary>
         /// <returns></returns>
         public ActionResult LoginOut()
         {
-            LoginHelper.UserLogout();
+            UserLoginHelper.UserLogout();
             return RedirectToAction("index");
         }
     }

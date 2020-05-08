@@ -16,14 +16,12 @@ namespace PersonalFramework.Controllers
     public class RoleController : BaseController<Role>
     {
         DataContext context = new DataContext();
-        /// <summary>
-        /// 大赛的大师大大声道
-        /// </summary>
-        /// <returns></returns>
+        [System.ComponentModel.DescriptionAttribute("角色列表页")]
         public ActionResult Index()
         {
             return View();
         }
+        [System.ComponentModel.DescriptionAttribute("角色编辑页")]
         [HttpGet]
         public ActionResult Edit(string id)
         {
@@ -39,6 +37,7 @@ namespace PersonalFramework.Controllers
                 return View(entity);
             }
         }
+
         public ActionResult a()
         {
             List<Type> controllerTypes = new List<Type>();
@@ -63,7 +62,7 @@ namespace PersonalFramework.Controllers
                 jsonBuilder.Append("\",\"action\":[");
 
                 //获取控制器下所有返回类型为ActionResult的方法，对MVC的权限控制只要限制所以的前后台交互请求就行，统一为ActionResult
-                var actions = controller.GetMethods().Where(method => method.ReturnType.Name == "ActionResult");
+                var actions = controller.GetMethods().Where(method => method.IsPublic == true && method.DeclaringType.Name!= "Controller" && method.DeclaringType.Name == controller.Name);
                 foreach (var action in actions)
                 {
                     jsonBuilder.Append("{\"actionName\":\"");

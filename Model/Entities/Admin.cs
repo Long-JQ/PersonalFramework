@@ -28,5 +28,9 @@ namespace Model
         [StringLength(250)]
         public string LastLoginIP { get; set; }
         public DateTime LastLoginTime { get; set; }
+        public Admin()
+        {
+            LastLoginTime = DateTime.Now;
+        }
     }
 }

@@ -10,19 +10,16 @@ using System.Web.Security;
 
 namespace PersonalFramework.Service
 {
-    public class LoginHelper
+    public class AdminLoginHelper
     {
         static User _loginuser = null;
-        static string tokenName = "PersonalFrameworkPassword".ToMD5();
-        public LoginHelper()
-        {
+        static string cookieName = "PersonalFrameworkPassword_Admin".ToMD5();
+        static string tokenName = "PersonalFrameworkPassword_Token".ToMD5();
 
-        }
-
-        public static User UserLogin(string keyword, string password)
+        public static Admin AdminLogin(string keyword, string password)
         {
-            var userService = new DataContext();
-            var account = userService.Users.Where(x => x.UserName == keyword.Trim()).FirstOrDefault();
+            var context = new DataContext();
+            var account = context.Admins.Where(x => x.AdminName == keyword.Trim()).FirstOrDefault();
             if (account != null)
             {
                 var result = DeCrypt.VerifyPassWord(password, account.Password, account.Salt);
@@ -30,16 +27,11 @@ namespace PersonalFramework.Service
                 {
                     return null;
                 }
-                //string token = Guid.NewGuid().ToString("N");
-                
-                //var EncryptToken = LoginHelper.Login(account.Token);
+                HttpContext.Current.Session[cookieName] = account;
 
-
-                HttpContext.Current.Session[FormsCookieName] = account;
-
-                HttpCookie cookie = new HttpCookie(FormsCookieName, account.UserName);
+                HttpCookie cookie = new HttpCookie(cookieName, account.AdminName);
                 HttpContext.Current.Response.Cookies.Add(cookie);
-                HttpCookie cookie2 = new HttpCookie(tokenName, account.UserName.ToMD5()+account.Password);
+                HttpCookie cookie2 = new HttpCookie(tokenName, account.AdminName.ToMD5()+account.Password);
                 HttpContext.Current.Response.Cookies.Add(cookie2);
 
                 return account;
@@ -69,7 +61,7 @@ namespace PersonalFramework.Service
             string strTicket = FormsAuthentication.Encrypt(ticket);
 
             // 使用新userdata保存cookie
-            HttpCookie cookie = new HttpCookie(FormsCookieName, strTicket);
+            HttpCookie cookie = new HttpCookie(cookieName, strTicket);
             //cookie.Expires = DateTime.Now.AddMinutes(30);
             cookie.Path = "/";
 
@@ -77,45 +69,7 @@ namespace PersonalFramework.Service
             return strTicket;
             #endregion
         }
-        private static string FormsCookieName { get { return FormsAuthentication.FormsCookieName + "admin"; } }
-        ////获取当前会员登录对象
-        ///// <summary>
-        ///// 获取当前会员登录对象
-        ///// <para>当没登陆或者登录信息不符时，这里返回 null </para>
-        ///// </summary>
-        ///// <returns></returns>
-        //public static User GetUser(string token)
-        //{
-        //    User entity = HttpContext.Current.Session[token] as User;
-        //    FormsAuthenticationTicket ticket = null;
-        //    if (entity != null)
-        //    {
-        //        ticket = FormsAuthentication.Decrypt(token);
-        //        if (HttpContext.Current.User.Identity.IsAuthenticated)
-        //        {
-        //            FormsIdentity id = new FormsIdentity(ticket);
-        //            GenericPrincipal principal = new GenericPrincipal(id, new string[] { ticket.UserData });
-        //            HttpContext.Current.User = principal;//存到HttpContext.User中
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
-        //    //客户端凭证验证不通过，要求重新登录
-        //    if (!HttpContext.Current.User.Identity.IsAuthenticated)
-        //        return null;
-            
-        //    //var ticket = ((System.Web.Security.FormsIdentity)HttpContext.Current.User.Identity).Ticket;
-        //    //客户端IP不一样，要求重新登录
-
-        //    //if (ticket.UserData != Tool.IPHelper.GetClientIp())
-        //    //    return null; 
-            
-        //    return entity;
-            
-        //}
-
+        
         //登出
         /// <summary>
         /// 登出
@@ -139,7 +93,7 @@ namespace PersonalFramework.Service
         /// <param name="ID"></param>
         public static void RemoveUser(string ID)
         {
-            HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, "");
+            HttpCookie cookie = new HttpCookie(cookieName, "");
             cookie.Expires = DateTime.Now.AddMinutes(-30);
             cookie.Path = "/";
             HttpContext.Current.Response.Cookies.Add(cookie);
@@ -151,20 +105,20 @@ namespace PersonalFramework.Service
         /// <para>当没登陆或者登录信息不符时，这里返回 null </para>
         /// </summary>
         /// <returns></returns>
-        public static Model.User CurrentUser()
+        public static Model.Admin CurrentUser()
         {
             //校验用户是否已经登录
-            var user = HttpContext.Current.Session[FormsCookieName] as Model.User;
+            var user = HttpContext.Current.Session[cookieName] as Model.Admin;
             if (user != null) return user;
             else
             {
-                if (HttpContext.Current.Request.Cookies[FormsCookieName] != null && HttpContext.Current.Request.Cookies[tokenName] != null)
+                if (HttpContext.Current.Request.Cookies[cookieName] != null && HttpContext.Current.Request.Cookies[tokenName] != null)
                 {
-                    string keyword = HttpContext.Current.Request.Cookies[FormsCookieName].Value;
+                    string keyword = HttpContext.Current.Request.Cookies[cookieName].Value;
                     string token = HttpContext.Current.Request.Cookies[tokenName].Value;
                     string pwd = token.Substring(32);
                     DataContext context = new DataContext();
-                    var account = context.Users.Single(a => a.UserName == keyword.Trim() && a.Password == pwd);
+                    var account = context.Admins.Single(a => a.AdminName == keyword.Trim() && a.Password == pwd);
                     if (account != null) return account;
                 }
             }

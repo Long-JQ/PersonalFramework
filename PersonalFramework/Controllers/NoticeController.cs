@@ -13,10 +13,12 @@ namespace PersonalFramework.Controllers
     public class NoticeController : BaseController<Notice>
     {
         DataContext context = new DataContext();
+        [System.ComponentModel.DescriptionAttribute("公告列表页")]
         public ActionResult Index()
         {
             return View();
         }
+        [System.ComponentModel.DescriptionAttribute("公告编辑页")]
         [HttpGet]
         public ActionResult Edit(string id)
         {

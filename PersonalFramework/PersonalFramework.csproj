@@ -200,6 +200,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Context\DataContext.cs" />
+    <Compile Include="Controllers\AuthorityController.cs" />
     <Compile Include="Controllers\ArticleClassController.cs" />
     <Compile Include="Controllers\NoticeController.cs" />
     <Compile Include="Controllers\ArticleController.cs" />
@@ -210,7 +211,7 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\TestApiController.cs" />
     <Compile Include="Filter\LoginFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -394,6 +395,9 @@
     <Content Include="Views\Article\Index.cshtml" />
     <Content Include="Views\ArticleClass\Edit.cshtml" />
     <Content Include="Views\ArticleClass\Index.cshtml" />
+    <Content Include="Views\Authority\Edit.cshtml" />
+    <Content Include="Views\Authority\Index.cshtml" />
+    <Content Include="Views\Role\Auth.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

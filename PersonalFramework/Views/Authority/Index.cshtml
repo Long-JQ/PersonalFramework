@@ -7,10 +7,9 @@
 <script type="text/html" id="toolbox">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    <a class="layui-btn layui-btn-xs" lay-event="auth">配置权限</a>
 </script>
 <script type="text/html" id="headtool">
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="add">新增</a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="add">扫描</a>
 </script>
 <script>
     layui.use('table', function () {
@@ -19,13 +18,15 @@
         //第一个实例
         table.render({
             elem: '#dataTable'
-            , url: '/role/list' //数据接口
+            , url: '/Authority/list' //数据接口
             , page: true //开启分页
             , toolbar: '#headtool'
             , cols: [[ //表头
                 { type: 'checkbox', fixed: 'left' }
                 , { field: 'ID', title: 'ID', sort: true, fixed: 'left' }
-                , { field: 'RoleName', title: '角色名' }
+                , { field: 'Controller', title: '目录' }
+                , { field: 'Action', title: '路径' }
+                , { field: 'ActionDesc', title: '路径名' }
                 , { field: 'SortCode', title: '排序码', sort: true }
                 , { fixed: 'right', width: 165, align: 'center', toolbar: '#toolbox' }
             ]]
@@ -51,22 +52,24 @@
                     }, 'json')
                 });
             } else if (layEvent === 'edit') { //编辑
-                //do something
-                location.href = '/role/edit?id=' + obj.data["ID"];
-                //alert(obj);
-                //同步更新缓存对应的值
-                //obj.update({
-                //    UserName: '123'
-                //    , title: 'xxx'
-                //});
+                location.href = '/authority/edit?id=' + obj.data["ID"];
             } else if (layEvent === 'add') { //新增
-                location.href = '/role/edit';
-            } else if (layEvent === 'auth') { //配置权限
-                location.href = '/role/auth?id=' + obj.data["ID"];
+                location.href = '/authority/edit';
             }
         });
 
     });
+</script>
 
-
+<script>
+    function scan() {
+        $.post('@Url.Action("scan")', function (d) {
+            if (d.Status == 200) {
+                layer.msg('扫描成功')
+                location.reload();
+            } else {
+                layer.msg(d.Message)
+            }
+        }, 'json')
+    }
 </script>

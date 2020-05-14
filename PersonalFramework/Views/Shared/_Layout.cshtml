@@ -72,6 +72,13 @@
                             <dd class="@(url.Contains("/role/edit") ? "layui-this" : "")"><a href="@Url.Action("edit","role")">编辑</a></dd>
                         </dl>
                     </li>
+                    <li class="layui-nav-item @(url.Contains("/authority") ? "layui-nav-itemed" : "")">
+                        <a class="" href="javascript:;">权限</a>
+                        <dl class="layui-nav-child">
+                            <dd class="@(url.Contains("/authority/index") ? "layui-this" : "")"><a href="/authority/index">列表</a></dd>
+                            <dd class="@(url.Contains("/authority/edit") ? "layui-this" : "")"><a href="@Url.Action("edit","authority")">编辑</a></dd>
+                        </dl>
+                    </li>
                     <li class="layui-nav-item @(url.Contains("/notice") ? "layui-nav-itemed" : "")">
                         <a class="" href="javascript:;">公告</a>
                         <dl class="layui-nav-child">
@@ -97,7 +104,7 @@
 
         <div class="layui-footer">
             <!-- 底部固定区域 -->
-            © layui.com - 底部固定区域
+            © xx.com - 底部固定区域
         </div>
     </div>
     @*<script src="//res.layui.com/layui/dist/layui.js" charset="utf-8"></script>*@

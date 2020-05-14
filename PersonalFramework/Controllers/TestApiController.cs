@@ -9,7 +9,7 @@ using System.Web.Http;
 
 namespace PersonalFramework.Controllers
 {
-    public class ValuesController : ApiController
+    public class TestApiController : ApiController
     {
         private string testdata;
         // GET api/values

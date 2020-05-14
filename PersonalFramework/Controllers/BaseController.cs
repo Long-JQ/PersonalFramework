@@ -22,23 +22,36 @@ namespace PersonalFramework.Controllers
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
-
-
+            
             //校验用户是否已经登录
             var model = PersonalFramework.Service.UserLoginHelper.CurrentUser();
             if (model != null)
             {
-                //Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(model.ID);
-
                 //string controllerName = filterContext.RouteData.Values["controller"].ToString().ToLower();
                 //string actionName = filterContext.RouteData.Values["action"].ToString().ToLower();
 
-                //string[] needactivecontroller = { "trade", "cfb", "mail" };
-                //string[] needactiveaction = { "applytransfer" };
-
-                //if (!Umodel.IsActivation && (needactivecontroller.Contains(controllerName) || needactiveaction.Contains(actionName)))
+                //if (context.Authorities.Where(x => x.ControllerName == controllerName && x.ActionName == actionName).Count() > 0)
                 //{
-                //    Response.Redirect("/AppCenter/User/doPass");
+                //    var adminVerify = context.Authorities.Single(x => x.ControllerName == controllerName && x.ActionName == actionName);
+
+                //    var role = context.Roles.Where(x=>x.ID == model.RoleID).Single();
+                //    if (role != null)
+                //    {
+                //        if (!(role.AuthorityID + ",").Contains("," + adminVerify.ID + ","))
+                //        {
+                //            Response.Redirect(Url.Action("NoAuthority", "Home"));
+                //            filterContext.Result = new EmptyResult();
+                //        }
+                //    }
+                //    else
+                //    {
+                //        Response.Redirect(Url.Action("NoAuthority", "Home"));
+                //        filterContext.Result = new EmptyResult();
+                //    }
+                //}
+                //else
+                //{
+                //    Response.Redirect(Url.Action("NoAuthority", "Home"));
                 //    filterContext.Result = new EmptyResult();
                 //}
             }

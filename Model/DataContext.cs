@@ -19,5 +19,6 @@ namespace Model
         public DbSet<Article> Articles { get; set; }
         public DbSet<ArticleClass> ArticleClasses { get; set; }
         public DbSet<Notice> Notices { get; set; }
+        public DbSet<Authority> Authorities { get; set; }
     }
 }

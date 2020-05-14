@@ -12,5 +12,6 @@ namespace Model
         [StringLength(250)]
         [Required(ErrorMessage = "请输入角色")]
         public string RoleName { get; set; }
+        public string AuthorityID { get; set; }
     }
 }

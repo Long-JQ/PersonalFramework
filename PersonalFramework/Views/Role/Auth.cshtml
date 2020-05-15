@@ -27,7 +27,7 @@
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button type="button" id="aa" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
     </form>
@@ -72,24 +72,37 @@
         layui.use('tree', function () {
             var tree = layui.tree;
 
-            //渲染
-            var inst1 = tree.render({
-                elem: '#test1'  //绑定元素
-                , data: [{
-                    title: '江西' //一级菜单
-                    , children: [{
-                        title: '南昌' //二级菜单
-                        , children: [{
-                            title: '高新区' //三级菜单
-                            //…… //以此类推，可无限层级
-                        }]
-                    }]
-                }, {
-                    title: '陕西' //一级菜单
-                    , children: [{
-                        title: '西安' //二级菜单
-                    }]
-                }]
+            $.post('@Url.Action("GetTree")', { "id": '@Model.ID' }, function (d) {
+                if (d.code == 0) {
+                    //渲染
+                    var inst1 = tree.render({
+                        elem: '#test1'  //绑定元素
+                        , id: 'tree1'
+                        , showCheckbox: true  //是否显示复选框
+                        , isJump: false //是否允许点击节点时弹出新窗口跳转
+                        , data: d.data
+                    });
+                } else {
+                    layer.msg(d.Message)
+                        }
+            }, 'json')
+
+            $("#aa").click(function () {
+                var checkedData = tree.getChecked('tree1'); //获取选中节点的数据
+
+                layer.alert(JSON.stringify(checkedData), { shade: 0 });
+                $.post('@Url.Action("AuthSubmit")', { "treeData": JSON.stringify(checkedData), "id": '@Model.ID' }, function (d) {
+                if (d.code == 0) {
+                    layer.msg('提交成功', {
+                            time: 1000,
+                            end: function () {
+                                location.href = '@Url.Action("index")';
+                            }
+                        })
+                } else {
+                    layer.msg(d.Message)
+                        }
+            }, 'json')
             });
         });
     </script>

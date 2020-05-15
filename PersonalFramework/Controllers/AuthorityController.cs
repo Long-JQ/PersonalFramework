@@ -3,6 +3,7 @@ using PagedList;
 using PersonalFramework.Service;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -27,7 +28,7 @@ namespace PersonalFramework.Controllers
         {
             if (!string.IsNullOrEmpty(id))
             {
-                var entity = Get(id.ToString());
+                var entity = GetEntity(id.ToString());
                 return View(entity);
             }
             else
@@ -54,40 +55,26 @@ namespace PersonalFramework.Controllers
             //遍历控制器类
             foreach (var controller in controllerTypes)
             {
-                var controllerName = controller.Name;
-                var controllerDesc = (controller.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute) == null ? "" : (controller.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute).Description;
-                //jsonBuilder.Append("{\"controllerName\":\"");
-                //jsonBuilder.Append(controller.Name);
-                //jsonBuilder.Append("\",\"controllerDesc\":\"");
-                //jsonBuilder.Append((controller.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute) == null ? "" : (controller.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute).Description);
-
-                //获取对控制器的描述Description
-                jsonBuilder.Append("\",\"action\":[");
-
+                Authority authority = new Authority();
+                authority.ParentID = "0";
+                authority.ParentName = "0";
+                authority.Action = controller.Name;
+                authority.ActionDesc = (controller.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute) == null ? "" : (controller.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute).Description;
+                authorities.Add(authority);
                 //获取控制器下所有返回类型为ActionResult的方法，对MVC的权限控制只要限制所以的前后台交互请求就行，统一为ActionResult
                 var actions = controller.GetMethods().Where(method => method.ReturnType.Name == "ActionResult" && method.DeclaringType.Name == controller.Name);
                 foreach (var action in actions)
                 {
-                    Authority authority = new Authority();
-                    authority.Controller = controllerName;
-                    authority.ControllerDesc = controllerDesc;
-                    authority.Action = action.Name;
-                    authority.ActionDesc = (action.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute) == null ? "" : (action.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute).Description;
-                    authorities.Add(authority);
-                    //jsonBuilder.Append("{\"actionName\":\"");
-                    //jsonBuilder.Append(action.Name);
-                    //jsonBuilder.Append("\",\"actionDesc\":\"");
-                    //jsonBuilder.Append((action.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute) == null ? "" : (action.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute).Description);    //获取对Action的描述
-                    //jsonBuilder.Append("\"},");
+                    Authority authority2 = new Authority();
+                    authority2.ParentID = authority.ID;
+                    authority2.ParentName = authority.Action;
+                    authority2.Action = action.Name;
+                    authority2.ActionDesc = (action.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute) == null ? "" : (action.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute).Description;
+                    authorities.Add(authority2);
                 }
-                //jsonBuilder.Remove(jsonBuilder.Length - 1, 1);
-                //jsonBuilder.Append("]},");
             }
             context.Authorities.AddRange(authorities);
-            //context.SaveChanges();
-            //jsonBuilder.Remove(jsonBuilder.Length - 1, 1);
-            //jsonBuilder.Append("]");
-            //return Content(jsonBuilder.ToString());
+            context.SaveChanges();
             ReturnData result = new ReturnData(200, "");
             return result.ToJson();
         }

@@ -12,9 +12,9 @@ namespace Model
         [StringLength(250)]
         public string Name { get; set; }
         [StringLength(250)]
-        public string Controller { get; set; }
+        public string ParentName { get; set; }
         [StringLength(250)]
-        public string ControllerDesc { get; set; }
+        public string ParentID { get; set; }
         [StringLength(250)]
         public string Action { get; set; }
         [StringLength(250)]

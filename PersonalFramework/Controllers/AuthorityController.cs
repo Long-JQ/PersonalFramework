@@ -43,10 +43,11 @@ namespace PersonalFramework.Controllers
             DataContext context = new DataContext();
             List<Authority> authorities = new List<Authority>();
             List<Type> controllerTypes = new List<Type>();
+            var oldAuthList = context.Authorities.ToList();
 
             //加载程序集
             var assembly = System.Reflection.Assembly.Load("PersonalFramework");
-            controllerTypes.AddRange(assembly.GetTypes().Where(type => typeof(IController).IsAssignableFrom(type) && type.Name != "ErrorController"));
+            controllerTypes.AddRange(assembly.GetTypes().Where(type => typeof(IController).IsAssignableFrom(type) && type.Name != "BaseController`1"));
 
             //创建动态字符串，拼接json数据    注：现在json类型传递数据比较流行，比xml简洁
             StringBuilder jsonBuilder = new StringBuilder();
@@ -58,9 +59,14 @@ namespace PersonalFramework.Controllers
                 Authority authority = new Authority();
                 authority.ParentID = "0";
                 authority.ParentName = "0";
-                authority.Action = controller.Name;
+                authority.Action = controller.Name.Substring(0,controller.Name.Length-10).ToLower();
                 authority.ActionDesc = (controller.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute) == null ? "" : (controller.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute).Description;
-                authorities.Add(authority);
+
+                if (oldAuthList.Where(x => x.ParentName == authority.ParentName && x.Action == authority.Action).Count() == 0)
+                {
+                    authorities.Add(authority);
+                }
+                
                 //获取控制器下所有返回类型为ActionResult的方法，对MVC的权限控制只要限制所以的前后台交互请求就行，统一为ActionResult
                 var actions = controller.GetMethods().Where(method => method.ReturnType.Name == "ActionResult" && method.DeclaringType.Name == controller.Name);
                 foreach (var action in actions)
@@ -68,9 +74,14 @@ namespace PersonalFramework.Controllers
                     Authority authority2 = new Authority();
                     authority2.ParentID = authority.ID;
                     authority2.ParentName = authority.Action;
-                    authority2.Action = action.Name;
+                    authority2.Action = action.Name.ToLower();
                     authority2.ActionDesc = (action.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute) == null ? "" : (action.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute).Description;
-                    authorities.Add(authority2);
+
+                    if (oldAuthList.Where(x => x.ParentName == authority2.ParentName && x.Action == authority2.Action).Count() == 0)
+                    {
+                        authorities.Add(authority2);
+                    }
+                    
                 }
             }
             context.Authorities.AddRange(authorities);

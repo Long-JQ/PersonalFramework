@@ -9,6 +9,12 @@ namespace PersonalFramework.Service
 {
     public class UserHelper
     {
+
+        /// <summary>
+        /// 获取权限树
+        /// </summary>
+        /// <param name="id">当前角色</param>
+        /// <returns></returns>
         public static ReturnData GetTreeData(string id)
         {
             DataContext context = new DataContext();

@@ -200,6 +200,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Context\DataContext.cs" />
+    <Compile Include="Context\DBHelper.cs" />
     <Compile Include="Controllers\AuthorityController.cs" />
     <Compile Include="Controllers\ArticleClassController.cs" />
     <Compile Include="Controllers\NoticeController.cs" />

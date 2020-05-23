@@ -38,7 +38,35 @@ namespace PersonalFramework.Controllers
                 return View(entity);
             }
         }
-        public string scan()
+        public string TestMethod()
+        {
+            DateTime dateTime = DateTime.Now;
+            List<Test> tList = new List<Test>();
+            Random random = new Random();
+            tList = context.Tests.Take(10000).ToList();
+            //for (int i = 0; i < 10000; i++)
+            //{
+            //    Model.Test t = new Test();
+            //    t.Name = random.Next(100000, 999999).ToString();
+            //    tList.Add(t);
+            //}
+            foreach (var item in tList)
+            {
+                item.Name = random.Next(100000, 999999).ToString();
+            }
+            var endTime = DateTime.Now;
+            var time = endTime - dateTime;
+
+            dateTime = DateTime.Now;
+            //PersonalFramework.Context.DBHelper dBHelper = new Context.DBHelper();
+            //dBHelper.BulkInsert(tList,null, "Tests");
+            //context.Tests.AddRange(tList);
+            context.SaveChanges();
+            endTime = DateTime.Now;
+            var time2 = endTime - dateTime;
+            return "";
+        }
+        public string Scan()
         {
             DataContext context = new DataContext();
             List<Authority> authorities = new List<Authority>();
@@ -66,9 +94,9 @@ namespace PersonalFramework.Controllers
                 {
                     authorities.Add(authority);
                 }
-                
+
                 //获取控制器下所有返回类型为ActionResult的方法，对MVC的权限控制只要限制所以的前后台交互请求就行，统一为ActionResult
-                var actions = controller.GetMethods().Where(method => method.ReturnType.Name == "ActionResult" && method.DeclaringType.Name == controller.Name);
+                var actions = controller.GetMethods().Where(method => (method.ReturnType.Name == "JsonResult" || method.ReturnType.Name == "String"|| method.ReturnType.Name == "ActionResult") && (method.DeclaringType.Name == controller.Name|| method.DeclaringType.Name == "BaseController`1"));
                 foreach (var action in actions)
                 {
                     Authority authority2 = new Authority();

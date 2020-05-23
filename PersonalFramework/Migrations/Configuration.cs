@@ -18,7 +18,9 @@
             var role1 = new Model.Role { RoleName = "管理员" };
             var role2 = new Model.Role { RoleName = "运营" };
             var role3 = new Model.Role { RoleName = "用户" };
-            context.Admins.Add(admin);
+            //UserHelper.AuthorityScan();
+            Controllers.AuthorityController ac = new Controllers.AuthorityController();
+            ac.Scan();
             var AuthList = context.Authorities.ToList();
             foreach (var item in AuthList)
             {
@@ -33,7 +35,7 @@
 
             salt = DeCrypt.SetSalt();
             var admin = new Model.Admin { AdminName = "admin",RoleID = role1.ID, RoleName = role1.RoleName, Salt = salt, Password = DeCrypt.SetPassWord("123", salt) };
-            
+            context.Admins.Add(admin);
             //  This method will be called after migrating to the latest version.
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method

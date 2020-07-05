@@ -24,7 +24,7 @@ namespace PersonalFramework.Controllers
         {
             if (!string.IsNullOrEmpty(id))
             {
-                var entity = Get(id.ToString());
+                var entity = GetEntity(id.ToString());
                 return View(entity);
             }
             else

@@ -78,23 +78,23 @@ namespace PersonalFramework.Service
         {
             if (CurrentUser() !=null)
             {
-                //获取会员ID
+                //获取ID
                 var id = HttpContext.Current.User.Identity.Name;
                 FormsAuthentication.SignOut();
                 _loginuser = null;
-                RemoveUser(id);
-                HttpContext.Current.Session.Remove(tokenName);
+                RemoveUser();
+                HttpContext.Current.Session.Remove(cookieName);
             }
         }
-        //移除指定会员ID的登录缓存
+        //移除登录缓存
         /// <summary>
-        /// 移除指定会员ID的登录缓存
+        /// 移除登录缓存
         /// </summary>
         /// <param name="ID"></param>
-        public static void RemoveUser(string ID)
+        public static void RemoveUser()
         {
             HttpCookie cookie = new HttpCookie(cookieName, "");
-            cookie.Expires = DateTime.Now.AddMinutes(-30);
+            cookie.Expires = DateTime.Now.AddYears(-30);
             cookie.Path = "/";
             HttpContext.Current.Response.Cookies.Add(cookie);
             FormsAuthentication.SignOut();

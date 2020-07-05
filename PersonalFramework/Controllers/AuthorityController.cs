@@ -43,23 +43,23 @@ namespace PersonalFramework.Controllers
             DateTime dateTime = DateTime.Now;
             List<Test> tList = new List<Test>();
             Random random = new Random();
-            tList = context.Tests.Take(10000).ToList();
-            //for (int i = 0; i < 10000; i++)
-            //{
-            //    Model.Test t = new Test();
-            //    t.Name = random.Next(100000, 999999).ToString();
-            //    tList.Add(t);
-            //}
-            foreach (var item in tList)
+            //tList = context.Tests.Take(10000).ToList();
+            for (int i = 0; i < 200000; i++)
             {
-                item.Name = random.Next(100000, 999999).ToString();
+                Model.Test t = new Test();
+                t.Name = random.Next(100000, 999999).ToString();
+                tList.Add(t);
             }
+            //foreach (var item in tList)
+            //{
+            //    item.Name = random.Next(100000, 999999).ToString();
+            //}
             var endTime = DateTime.Now;
             var time = endTime - dateTime;
 
             dateTime = DateTime.Now;
-            //PersonalFramework.Context.DBHelper dBHelper = new Context.DBHelper();
-            //dBHelper.BulkInsert(tList,null, "Tests");
+            PersonalFramework.Context.DBHelper dBHelper = new Context.DBHelper();
+            dBHelper.BulkInsert(tList,null, "Tests");
             //context.Tests.AddRange(tList);
             context.SaveChanges();
             endTime = DateTime.Now;

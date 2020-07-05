@@ -1,13 +1,15 @@
 ﻿@{ 
-    Model.User Umodel = null;
-    if (PersonalFramework.Service.UserLoginHelper.CurrentUser() == null)
+    var name = "";
+    if (PersonalFramework.Service.AdminLoginHelper.CurrentUser() != null)
     {
-        Response.Redirect(Url.Action("Index", "Login"));
+        name = PersonalFramework.Service.AdminLoginHelper.CurrentUser().AdminName;
+    }
+    else if(PersonalFramework.Service.UserLoginHelper.CurrentUser() != null)
+    {
+        name = PersonalFramework.Service.UserLoginHelper.CurrentUser().UserName;
     }
 
     string url = Request.Url.ToString().ToLower();
-    var user = PersonalFramework.Service.UserLoginHelper.CurrentUser();
-    var name = user != null ? user.UserName : "贤心";
 }
 <!DOCTYPE html>
 <html>

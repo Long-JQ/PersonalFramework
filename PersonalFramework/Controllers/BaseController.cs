@@ -24,21 +24,30 @@ namespace PersonalFramework.Controllers
             base.OnActionExecuting(filterContext);
 
             //校验用户是否已经登录
+            var admin = PersonalFramework.Service.AdminLoginHelper.CurrentUser();
             var model = PersonalFramework.Service.UserLoginHelper.CurrentUser();
-            if (model != null)
+            if (admin != null || model != null)
             {
-                string controllerName = filterContext.RouteData.Values["controller"].ToString().ToLower();
-                string actionName = filterContext.RouteData.Values["action"].ToString().ToLower();
-                var AuthList = context.Authorities.ToList();
-
-                if (AuthList.Where(x => x.ParentName == controllerName && x.Action == actionName).Count() > 0)
+                if (admin == null && model != null)
                 {
-                    var adminVerify = AuthList.Single(x => x.ParentName == controllerName && x.Action == actionName);
+                    string controllerName = filterContext.RouteData.Values["controller"].ToString().ToLower();
+                    string actionName = filterContext.RouteData.Values["action"].ToString().ToLower();
+                    var AuthList = context.Authorities.ToList();
 
-                    var role = context.Roles.Where(x => x.ID == model.RoleID).Single();
-                    if (role != null)
+                    if (AuthList.Where(x => x.ParentName == controllerName && x.Action == actionName).Count() > 0)
                     {
-                        if (!(role.AuthorityID + ",").Contains("," + adminVerify.ID + ","))
+                        var adminVerify = AuthList.Where(x => x.ParentName == controllerName && x.Action == actionName).FirstOrDefault();
+
+                        var role = context.Roles.Where(x => x.ID == model.RoleID).Single();
+                        if (role != null)
+                        {
+                            if (!(role.AuthorityID + ",").Contains("," + adminVerify.ID + ","))
+                            {
+                                Response.Redirect(Url.Action("NoAuthority", "Home"));
+                                filterContext.Result = new EmptyResult();
+                            }
+                        }
+                        else
                         {
                             Response.Redirect(Url.Action("NoAuthority", "Home"));
                             filterContext.Result = new EmptyResult();
@@ -50,13 +59,9 @@ namespace PersonalFramework.Controllers
                         filterContext.Result = new EmptyResult();
                     }
                 }
-                else
-                {
-                    Response.Redirect(Url.Action("NoAuthority", "Home"));
-                    filterContext.Result = new EmptyResult();
-                }
+                
             }
-            else
+            else if (admin == null || model == null)
             {
                 string controllerName = filterContext.RouteData.Values["controller"].ToString().ToLower();
                 if (controllerName == "icomanage") { Response.Redirect("/ico/sign_in"); }

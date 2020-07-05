@@ -2,6 +2,7 @@
 using PersonalFramework.Service;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -14,6 +15,8 @@ namespace PersonalFramework.Controllers
 {
     public class LoginController : Controller
     {
+        string LoginOnlyAdmin = ConfigurationManager.AppSettings["LoginOnlyAdmin"];
+
         [System.ComponentModel.DescriptionAttribute("登录页")]
         public ActionResult Index()
         {
@@ -24,8 +27,13 @@ namespace PersonalFramework.Controllers
         {
             try
             {
-                var account = UserLoginHelper.UserLogin(keyword, password);
-                if (account == null)
+                var account = AdminLoginHelper.AdminLogin(keyword, password) != null ? 1 :0 ;
+                if (LoginOnlyAdmin == "false" && account==0)
+                {
+                    account = UserLoginHelper.UserLogin(keyword, password) != null ? 1 : 0;
+                }
+                //var account = AdminLoginHelper.AdminLogin(keyword, password);
+                if (account == 0)
                 {
                     ReturnData result = new ReturnData(500,"登录失败");
                     return result.ToJson();

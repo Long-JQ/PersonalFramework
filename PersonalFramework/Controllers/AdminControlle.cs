@@ -8,21 +8,20 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web;
 using System.Web.Mvc;
 
 namespace PersonalFramework.Controllers
 {
-    [System.ComponentModel.DescriptionAttribute("公告")]
-    public class NoticeController : BaseController<Notice>
+    [System.ComponentModel.DescriptionAttribute("管理员")]
+    public class AdminController : BaseController<Admin>
     {
         DataContext context = new DataContext();
-        [System.ComponentModel.DescriptionAttribute("公告列表页")]
+        [System.ComponentModel.DescriptionAttribute("管理员列表页")]
         public ActionResult Index()
         {
             return View();
         }
-        [System.ComponentModel.DescriptionAttribute("公告编辑页")]
+        [System.ComponentModel.DescriptionAttribute("管理员编辑页")]
         [HttpGet]
         public ActionResult Edit(string id)
         {
@@ -33,13 +32,12 @@ namespace PersonalFramework.Controllers
             }
             else
             {
-                var entity = new Notice();
+                var entity = new Admin();
                 entity.ID = "";
                 return View(entity);
             }
         }
-        [System.ComponentModel.DescriptionAttribute("公告编辑提交")]
-        [ValidateInput(false)]
+        [System.ComponentModel.DescriptionAttribute("管理员编辑提交")]
         [HttpPost]
         public new string Edit(FormCollection fc)
         {
@@ -47,17 +45,17 @@ namespace PersonalFramework.Controllers
             {
                 try
                 {
-                    var entity = context.Set<Article>().Find(fc["ID"]);
+                    var entity = context.Set<Admin>().Find(fc["ID"]);
 
                     if (string.IsNullOrEmpty(fc["ID"]) && entity == null)
                     {
                         fc.Remove("ID");
-                        entity = new Article();
-
-                        entity.Author = AdminLoginHelper.CurrentUser().ID;
-
+                        entity = new Admin();
                         TryUpdateModel(entity, fc);
-                        context.Set<Article>().Add(entity);
+                        entity.RoleName = context.Roles.Find(entity.RoleID).RoleName;
+                        entity.Salt = PersonalFramework.Service.DeCrypt.SetSalt();
+                        entity.Password = PersonalFramework.Service.DeCrypt.SetPassWord(entity.Password, entity.Salt);
+                        context.Set<Admin>().Add(entity);
                         context.SaveChanges();
                         ReturnData result = new ReturnData(200, "编辑成功");
                         return result.ToJson();
@@ -65,6 +63,16 @@ namespace PersonalFramework.Controllers
                     else
                     {
                         TryUpdateModel(entity, fc);
+                        entity.RoleName = context.Roles.Find(entity.RoleID).RoleName;
+                        context.Entry(entity).Property(m => m.Salt).IsModified = false;
+                        if (entity.Password == "")
+                        {
+                            context.Entry(entity).Property(m => m.Password).IsModified = false;
+                        }
+                        else
+                        {
+                            entity.Password = PersonalFramework.Service.DeCrypt.SetPassWord(entity.Password, entity.Salt);
+                        }
                         context.SaveChanges();
                         ReturnData result = new ReturnData(200, "编辑成功");
                         return result.ToJson();
@@ -88,24 +96,6 @@ namespace PersonalFramework.Controllers
                 return result.ToJson();
             }
         }
-        [System.ComponentModel.DescriptionAttribute("公告图片上传")]
-        public ActionResult UploadFile(HttpPostedFileBase file)
-        {
-            try
-            {
-                file = Request.Files[0];
-                HttpPostedFileBase imgFile = Request.Files["imgFile"];
-                string oldLogo = "/Upload/";
 
-                string img = Service.UploadPic.MvcUpload(file, new string[] { ".png", ".gif", ".jpg" }, 1, System.Web.HttpContext.Current.Server.MapPath(oldLogo));
-                var imgurl = ".." + oldLogo + img;
-                //ckeditor5图片返回格式
-                return Json(new { uploaded = "1", fileName = img, url = imgurl }, JsonRequestBehavior.DenyGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(new { data = new { src = "" }, code = 500, msg = "上传失败" }, JsonRequestBehavior.DenyGet);
-            }
-        }
     }
 }

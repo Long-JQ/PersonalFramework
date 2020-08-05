@@ -26,7 +26,7 @@
 
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                <button id="aa" type="button" class="layui-btn"  lay-filter="demo1">立即提交</button>
                 <button type="button" id="aa" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
@@ -92,7 +92,7 @@
 
                 layer.alert(JSON.stringify(checkedData), { shade: 0 });
                 $.post('@Url.Action("AuthSubmit")', { "treeData": JSON.stringify(checkedData), "id": '@Model.ID' }, function (d) {
-                if (d.code == 0) {
+                if (d.code == 200) {
                     layer.msg('提交成功', {
                             time: 1000,
                             end: function () {

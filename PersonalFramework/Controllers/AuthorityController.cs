@@ -14,6 +14,7 @@ using System.Web.Mvc;
 
 namespace PersonalFramework.Controllers
 {
+    [System.ComponentModel.DescriptionAttribute("权限")]
     public class AuthorityController : BaseController<Authority>
     {
         DataContext context = new DataContext();
@@ -38,6 +39,7 @@ namespace PersonalFramework.Controllers
                 return View(entity);
             }
         }
+        [System.ComponentModel.DescriptionAttribute("测试")]
         public string TestMethod()
         {
             DateTime dateTime = DateTime.Now;
@@ -66,12 +68,14 @@ namespace PersonalFramework.Controllers
             var time2 = endTime - dateTime;
             return "";
         }
+        [System.ComponentModel.DescriptionAttribute("权限扫描")]
         public string Scan()
         {
             DataContext context = new DataContext();
             List<Authority> authorities = new List<Authority>();
             List<Type> controllerTypes = new List<Type>();
             var oldAuthList = context.Authorities.ToList();
+            string[] AuthorityController = { "ArticleClass", "Article", "Authority", "Notice", "Role", "Admin" };
 
             //加载程序集
             var assembly = System.Reflection.Assembly.Load("PersonalFramework");
@@ -90,19 +94,24 @@ namespace PersonalFramework.Controllers
                 authority.Action = controller.Name.Substring(0,controller.Name.Length-10).ToLower();
                 authority.ActionDesc = (controller.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute) == null ? "" : (controller.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute).Description;
 
+                if (!AuthorityController.Contains(controller.Name.Substring(0, controller.Name.Length - 10)))
+                {
+                    continue;
+                }
                 if (oldAuthList.Where(x => x.ParentName == authority.ParentName && x.Action == authority.Action).Count() == 0)
                 {
                     authorities.Add(authority);
                 }
 
                 //获取控制器下所有返回类型为ActionResult的方法，对MVC的权限控制只要限制所以的前后台交互请求就行，统一为ActionResult
-                var actions = controller.GetMethods().Where(method => (method.ReturnType.Name == "JsonResult" || method.ReturnType.Name == "String"|| method.ReturnType.Name == "ActionResult") && (method.DeclaringType.Name == controller.Name|| method.DeclaringType.Name == "BaseController`1"));
+                var actions = controller.GetMethods().Where(method => (method.ReturnType.Name == "JsonResult" || method.ReturnType.Name == "String"|| method.ReturnType.Name == "ActionResult") && (method.DeclaringType.Name == controller.Name|| method.DeclaringType.Name.Contains("BaseController")));
                 foreach (var action in actions)
                 {
                     Authority authority2 = new Authority();
                     authority2.ParentID = authority.ID;
                     authority2.ParentName = authority.Action;
                     authority2.Action = action.Name.ToLower();
+                    authority2.Type = action.ReturnType.Name;
                     authority2.ActionDesc = (action.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute) == null ? "" : (action.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute).Description;
 
                     if (oldAuthList.Where(x => x.ParentName == authority2.ParentName && x.Action == authority2.Action).Count() == 0)

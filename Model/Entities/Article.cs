@@ -51,7 +51,6 @@ namespace Model
 
         [StringLength(250)]
         [DisplayName("文章分类ID")]
-        [Required(ErrorMessage = "请选择文章分类")]
         public string ClassID { get; set; }
 
         public Article()

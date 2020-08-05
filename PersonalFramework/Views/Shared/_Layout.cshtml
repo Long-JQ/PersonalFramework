@@ -1,13 +1,19 @@
 ﻿@{ 
     var name = "";
-    if (PersonalFramework.Service.AdminLoginHelper.CurrentUser() != null)
-    {
-        name = PersonalFramework.Service.AdminLoginHelper.CurrentUser().AdminName;
-    }
-    else if(PersonalFramework.Service.UserLoginHelper.CurrentUser() != null)
-    {
-        name = PersonalFramework.Service.UserLoginHelper.CurrentUser().UserName;
-    }
+    //if (PersonalFramework.Service.AdminLoginHelper.CurrentUser() != null)
+    //{
+    //    name = PersonalFramework.Service.AdminLoginHelper.CurrentUser().AdminName;
+    //}
+    //else if(PersonalFramework.Service.UserLoginHelper.CurrentUser() != null)
+    //{
+    //    name = PersonalFramework.Service.UserLoginHelper.CurrentUser().UserName;
+    //}
+    var admin = PersonalFramework.Service.AdminLoginHelper.CurrentUser();
+    var context = new Model.DataContext();
+    var role = context.Roles.Find(admin.RoleID);
+    var adminRole = context.Roles.Where(x=>x.RoleName== "管理员").Single();
+    var authList = context.Authorities.Where(x => role.AuthorityID.Contains(x.ID)).Select(x => "/" + x.ParentName +"/"+ x.Action).ToList();
+    name = admin.AdminName;
 
     string url = Request.Url.ToString().ToLower();
 }
@@ -28,7 +34,7 @@
         <div class="layui-header">
             <div class="layui-logo">管理后台</div>
             <!-- 头部区域（可配合layui已有的水平导航） -->
-            <ul class="layui-nav layui-layout-left">
+            @*<ul class="layui-nav layui-layout-left">
                 <li class="layui-nav-item"><a href="">控制台</a></li>
                 <li class="layui-nav-item"><a href="">商品管理</a></li>
                 <li class="layui-nav-item"><a href="">用户</a></li>
@@ -40,7 +46,7 @@
                         <dd><a href="">授权管理</a></dd>
                     </dl>
                 </li>
-            </ul>
+            </ul>*@
             <ul class="layui-nav layui-layout-right">
                 <li class="layui-nav-item">
                     <a href="javascript:;">
@@ -60,41 +66,88 @@
             <div class="layui-side-scroll">
                 <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
                 <ul class="layui-nav layui-nav-tree" lay-filter="test">
-                    <li class="layui-nav-item @(url.Contains("/user") ? "layui-nav-itemed" : "")">
-                        <a class="" href="javascript:;">用户</a>
-                        <dl class="layui-nav-child">
-                            <dd class="@(url.Contains("/user/index") ? "layui-this" : "")"><a href="/user/index">列表</a></dd>
-                            <dd class="@(url.Contains("/user/edit") ? "layui-this" : "")"><a href="@Url.Action("edit","user")">编辑</a></dd>
-                        </dl>
-                    </li>
-                    <li class="layui-nav-item @(url.Contains("/role") ? "layui-nav-itemed" : "")">
-                        <a class="" href="javascript:;">角色</a>
-                        <dl class="layui-nav-child">
-                            <dd class="@(url.Contains("/role/index") ? "layui-this" : "")"><a href="/role/index">列表</a></dd>
-                            <dd class="@(url.Contains("/role/edit") ? "layui-this" : "")"><a href="@Url.Action("edit","role")">编辑</a></dd>
-                        </dl>
-                    </li>
-                    <li class="layui-nav-item @(url.Contains("/authority") ? "layui-nav-itemed" : "")">
-                        <a class="" href="javascript:;">权限</a>
-                        <dl class="layui-nav-child">
-                            <dd class="@(url.Contains("/authority/index") ? "layui-this" : "")"><a href="/authority/index">列表</a></dd>
-                            <dd class="@(url.Contains("/authority/edit") ? "layui-this" : "")"><a href="@Url.Action("edit","authority")">编辑</a></dd>
-                        </dl>
-                    </li>
-                    <li class="layui-nav-item @(url.Contains("/notice") ? "layui-nav-itemed" : "")">
-                        <a class="" href="javascript:;">公告</a>
-                        <dl class="layui-nav-child">
-                            <dd class="@(url.Contains("/notice/index") ? "layui-this" : "")"><a href="/notice/index">列表</a></dd>
-                            <dd class="@(url.Contains("/notice/edit") ? "layui-this" : "")"><a href="@Url.Action("edit","notice")">编辑</a></dd>
-                        </dl>
-                    </li>
-                    <li class="layui-nav-item @(url.Contains("/article") ? "layui-nav-itemed" : "")">
-                        <a class="" href="javascript:;">文章</a>
-                        <dl class="layui-nav-child">
-                            <dd class="@(url.Contains("/article/index") ? "layui-this" : "")"><a href="/article/index">列表</a></dd>
-                            <dd class="@(url.Contains("/article/edit") ? "layui-this" : "")"><a href="@Url.Action("edit","article")">编辑</a></dd>
-                        </dl>
-                    </li>
+                    @{
+                        if (admin.RoleID == adminRole.ID || authList.Contains("/admin/index") || authList.Contains("/admin/edit"))
+                        {
+                            <li class="layui-nav-item @(url.Contains("/admin") ? "layui-nav-itemed" : "")">
+                                <a class="" href="javascript:;">用户</a>
+                                <dl class="layui-nav-child">
+                                    @if (admin.RoleID == adminRole.ID || authList.Contains("/admin/index"))
+                                    {
+                                        <dd class="@(url.Contains("/admin/index") ? "layui-this" : "")"><a href="/admin/index">列表</a></dd>
+                                    }
+                                    @if (admin.RoleID == adminRole.ID || authList.Contains("/admin/edit"))
+                                    {
+                                        <dd class="@(url.Contains("/admin/edit") ? "layui-this" : "")"><a href="@Url.Action("edit","admin")">编辑</a></dd>
+                                    }
+                                </dl>
+                            </li>
+                        }
+                        if (admin.RoleID == adminRole.ID || authList.Contains("/role/index") || authList.Contains("/role/edit"))
+                        {
+                            <li class="layui-nav-item @(url.Contains("/role") ? "layui-nav-itemed" : "")">
+                                <a class="" href="javascript:;">角色</a>
+                                <dl class="layui-nav-child">
+                                    @if (admin.RoleID == adminRole.ID || authList.Contains("/role/index"))
+                                    {
+                                        <dd class="@(url.Contains("/role/index") ? "layui-this" : "")"><a href="/role/index">列表</a></dd>
+                                    }
+                                    @if (admin.RoleID == adminRole.ID || authList.Contains("/role/edit"))
+                                    {
+                                        <dd class="@(url.Contains("/role/edit") ? "layui-this" : "")"><a href="@Url.Action("edit","role")">编辑</a></dd>
+                                    }
+                                </dl>
+                            </li>
+                        }
+                        if (admin.RoleID == adminRole.ID || authList.Contains("/authority/index") || authList.Contains("/authority/edit"))
+                        {
+                            <li class="layui-nav-item @(url.Contains("/authority") ? "layui-nav-itemed" : "")">
+                                <a class="" href="javascript:;">权限</a>
+                                <dl class="layui-nav-child">
+                                    @if (admin.RoleID == adminRole.ID || authList.Contains("/authority/index"))
+                                    {
+                                        <dd class="@(url.Contains("/authority/index") ? "layui-this" : "")"><a href="/authority/index">列表</a></dd>
+                                    }
+                                    @if (admin.RoleID == adminRole.ID || authList.Contains("/authority/edit"))
+                                    {
+                                        <dd class="@(url.Contains("/authority/edit") ? "layui-this" : "")"><a href="@Url.Action("edit","authority")">编辑</a></dd>
+                                    }
+                                </dl>
+                            </li>
+                        }
+                        if (admin.RoleID == adminRole.ID || authList.Contains("/notice/index") || authList.Contains("/notice/edit"))
+                        {
+                            <li class="layui-nav-item @(url.Contains("/notice") ? "layui-nav-itemed" : "")">
+                                <a class="" href="javascript:;">公告</a>
+                                <dl class="layui-nav-child">
+                                    @if (admin.RoleID == adminRole.ID || authList.Contains("/notice/index"))
+                                    {
+                                        <dd class="@(url.Contains("/notice/index") ? "layui-this" : "")"><a href="/notice/index">列表</a></dd>
+                                    }
+                                    @if (admin.RoleID == adminRole.ID || authList.Contains("/notice/edit"))
+                                    {
+                                        <dd class="@(url.Contains("/notice/edit") ? "layui-this" : "")"><a href="@Url.Action("edit","notice")">编辑</a></dd>
+                                    }
+                                </dl>
+                            </li>
+                        }
+                        if (admin.RoleID == adminRole.ID || authList.Contains("/article/index") || authList.Contains("/article/edit"))
+                        {
+                            <li class="layui-nav-item @(url.Contains("/article") ? "layui-nav-itemed" : "")">
+                                <a class="" href="javascript:;">文章</a>
+                                <dl class="layui-nav-child">
+                                    @if (admin.RoleID == adminRole.ID || authList.Contains("/article/index"))
+                                    {
+                                        <dd class="@(url.Contains("/article/index") ? "layui-this" : "")"><a href="/article/index">列表</a></dd>
+                                    }
+                                    @if (admin.RoleID == adminRole.ID || authList.Contains("/article/edit"))
+                                    {
+                                        <dd class="@(url.Contains("/article/edit") ? "layui-this" : "")"><a href="@Url.Action("edit","article")">编辑</a></dd>
+                                    }
+                                </dl>
+                            </li>
+                        }
+                    }
                 </ul>
             </div>
         </div>

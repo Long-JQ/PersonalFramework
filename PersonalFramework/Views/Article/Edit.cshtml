@@ -34,22 +34,108 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">标题</label>
+            <label class="layui-form-label">内容</label>
             <div class="layui-input-block">
-                <textarea name="content" id="editor"></textarea>
+                <textarea id="editor"></textarea>
             </div>
         </div>
 
         <div class="layui-form-item">
             <div class="layui-input-block">
+                <input name="content" id="content" hidden/>
                 <button type="submit" class="layui-btn" lay-submit="" lay-filter="submitBtn">立即提交</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
     </form>
     <script>
+        class MyUploadAdapter {
+            constructor(loader) {
+                this.loader = loader;
+            }
+
+            upload() {
+                return this.loader.file
+                    .then(file => new Promise((resolve, reject) => {
+                        this._initRequest();
+                        this._initListeners(resolve, reject, file);
+                        this._sendRequest(file);
+                    }));
+            }
+
+            abort() {
+                if (this.xhr) {
+                    this.xhr.abort();
+                }
+            }
+
+            _initRequest() {
+                const xhr = this.xhr = new XMLHttpRequest();
+
+                // 下面的API换成自己的接口地址
+                xhr.open('POST', '@Url.Action("UploadFile")', true);
+                xhr.responseType = 'json';
+            }
+
+            // Initializes XMLHttpRequest listeners.
+            _initListeners(resolve, reject, file) {
+                const xhr = this.xhr;
+                const loader = this.loader;
+                const genericErrorText = `Couldn't upload file: ${file.name}.`;
+
+                xhr.addEventListener('error', () => reject(genericErrorText));
+                xhr.addEventListener('abort', () => reject());
+                xhr.addEventListener('load', () => {
+                    const response = xhr.response;
+
+                    if (!response || response.error) {
+                        return reject(response && response.error ? response.error.message : genericErrorText);
+                    }
+
+                    resolve({
+                        default: response.url
+                    });
+                });
+
+                if (xhr.upload) {
+                    xhr.upload.addEventListener('progress', evt => {
+                        if (evt.lengthComputable) {
+                            loader.uploadTotal = evt.total;
+                            loader.uploaded = evt.loaded;
+                        }
+                    });
+                }
+            }
+
+            // Prepares the data and sends the request.
+            _sendRequest(file) {
+                // Prepare the form data.
+                const data = new FormData();
+
+                data.append('upload', file);
+
+                this.xhr.send(data);
+            }
+        }
+
+        // ...
+
+        function MyCustomUploadAdapterPlugin(editor) {
+            editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                // Configure the URL to the upload script in your back-end here!
+                return new MyUploadAdapter(loader);
+            };
+        }
+        var myEditor;
         ClassicEditor
-            .create(document.querySelector('#editor'))
+            .create(document.querySelector('#editor'), {
+                extraPlugins: [MyCustomUploadAdapterPlugin],
+                language: 'zh-cn' 
+            }).then(editor => {
+                console.log('Editor was initialized', editor);
+                myEditor = editor;
+                myEditor.setData('@Html.Raw(Model.Content)')
+            })
             .catch(error => {
                 console.error(error);
             });
@@ -61,13 +147,11 @@
                 , layer = layui.layer
                 , layedit = layui.layedit
                 , laydate = layui.laydate;
-
-
+            
             //监听提交
             form.on('submit(submitBtn)', function (data) {
-                //layer.alert(JSON.stringify(data.field), {
-                //    title: '最终的提交信息'
-                //})
+                $("#content").val(myEditor.getData());
+                
                  $.post('@Url.Action("Edit")', $('#form').serialize(), function (d) {
                     if (d.code == 200) {
                         layer.msg('提交成功', {
@@ -82,8 +166,6 @@
                 }, 'json')
                 return false;
             });
-
-
         });
     </script>
 

@@ -18,7 +18,7 @@
         //第一个实例
         table.render({
             elem: '#dataTable'
-            , url: '/notice/list' //数据接口
+            , url: '@Url.Action("list")' //数据接口
             , page: true //开启分页
             , toolbar: '#headtool'
             , cols: [[ //表头
@@ -50,9 +50,9 @@
                     }, 'json')
                 });
             } else if (layEvent === 'edit') { //编辑
-                location.href = '/notice/edit?id=' + obj.data["ID"];
+                location.href = '/article/edit?id=' + obj.data["ID"];
             } else if (layEvent === 'add') { //新增
-                location.href = '/notice/edit';
+                location.href = '/article/edit';
             }
         });
 

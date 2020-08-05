@@ -15,7 +15,7 @@ namespace Model
         [StringLength(250)]
         public string AdminName { get; set; }
         [StringLength(250)]
-        [Required(ErrorMessage = "请输入管理员名字")]
+        [Required(ErrorMessage = "请输入密码")]
         public string Password { get; set; }
         [StringLength(250)]
         public string Salt { get; set; }

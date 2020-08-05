@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace PersonalFramework.Controllers
 {
+    [System.ComponentModel.DescriptionAttribute("文章分类")]
     public class ArticleClassController : BaseController<ArticleClass>
     {
         DataContext context = new DataContext();

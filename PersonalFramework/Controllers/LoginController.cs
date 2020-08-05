@@ -41,6 +41,25 @@ namespace PersonalFramework.Controllers
                 else
                 {
                     ReturnData result = new ReturnData(0,"登录成功");
+                    var admin = PersonalFramework.Service.AdminLoginHelper.CurrentUser();
+                    //记录操作日志，写进操作日志中
+                    var log = new ActionLog();
+                    log.ActionContent = "管理员登录";
+                    log.CreateTime = DateTime.Now;
+                    log.IP = IPHelper.GetClientIp();
+                    log.Location = "Login/Login";
+                    log.RequestData = Request.Form.ToString();
+                    log.Platform = "后台";
+                    log.Source = Request.HttpMethod;
+                    log.RequestUrl = Request.Url.AbsoluteUri;
+                    if (admin != null)
+                    {
+                        log.UID = admin.ID;
+                        log.UserName = admin.AdminName;
+                    }
+                    DataContext context = new DataContext();
+                    context.ActionLog.Add(log);
+                    context.SaveChanges();
                     return result.ToJson();
                 }
             }

@@ -12,9 +12,12 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using PersonalFramework.Service;
 using System.Web;
+using System.Data.Entity.Validation;
 
 namespace PersonalFramework.Controllers
 {
+    [System.ComponentModel.DescriptionAttribute("通用类")]
+    [ExceptionFilter]
     public class BaseController<T> : Controller where T : BaseEntity, new()
     {
         DataContext context = new DataContext();
@@ -73,6 +76,40 @@ namespace PersonalFramework.Controllers
 
             }
         }
+
+        protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        {
+            base.OnActionExecuted(filterContext);
+            string controllerName = filterContext.RouteData.Values["controller"].ToString().ToLower();
+            string actionName = filterContext.RouteData.Values["action"].ToString().ToLower();
+            var admin = PersonalFramework.Service.AdminLoginHelper.CurrentUser();
+
+            //记录操作日志，写进操作日志中
+            var log = new ActionLog();
+            log.ActionContent = "";
+            log.CreateTime = DateTime.Now;
+            log.IP = IPHelper.GetClientIp();
+            log.Location = controllerName + "/" + actionName;
+            log.RequestData = Request.Form.ToString();
+            log.Platform = "后台";
+            log.Source = Request.HttpMethod;
+            log.RequestUrl = Request.Url.AbsoluteUri;
+            if (admin != null)
+            {
+                log.UID = admin.ID;
+                log.UserName = admin.AdminName;
+            }
+            context.ActionLog.Add(log);
+            //context.SaveChanges();
+            
+            if (Request.UrlReferrer != null)
+            {
+                ViewBag.FormUrl = Request.UrlReferrer.ToString();
+            }
+        }
+
+
+        [System.ComponentModel.DescriptionAttribute("通用新增")]
         /// <summary>
         /// 通用新增
         /// </summary>
@@ -84,6 +121,7 @@ namespace PersonalFramework.Controllers
             context.SaveChanges();
             return "true";
         }
+        [System.ComponentModel.DescriptionAttribute("通用删除")]
         /// <summary>
         /// 通用删除
         /// </summary>
@@ -116,6 +154,7 @@ namespace PersonalFramework.Controllers
                 return result.ToJson();
             }
         }
+        [System.ComponentModel.DescriptionAttribute("通用实体检查")]
         /// <summary>
         /// 通用实体检查
         /// </summary>
@@ -135,6 +174,7 @@ namespace PersonalFramework.Controllers
 
             return entity.ToJson();
         }
+        [System.ComponentModel.DescriptionAttribute("通用单个查询")]
         /// <summary>
         /// 通用单个查询
         /// </summary>
@@ -154,6 +194,7 @@ namespace PersonalFramework.Controllers
 
             return entity;
         }
+        [System.ComponentModel.DescriptionAttribute("通用列表集合查询")]
         /// <summary>
         /// 通用列表集合查询
         /// </summary>
@@ -173,9 +214,11 @@ namespace PersonalFramework.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                ReturnData result = new ReturnData(500, ex.Message);
+                return result.ToJson();
             }
         }
+        [System.ComponentModel.DescriptionAttribute("通用编辑与新增")]
         /// <summary>
         /// 通用编辑与新增
         /// </summary>
@@ -208,9 +251,9 @@ namespace PersonalFramework.Controllers
                     }
                     
                 }
-                catch (DbUpdateConcurrencyException ex)
+                catch (DbEntityValidationException ex)
                 {
-                    ReturnData result = new ReturnData(500, ex.Message);
+                    ReturnData result = new ReturnData(500, ex.EntityValidationErrors.First().ValidationErrors.First().ErrorMessage);
                     return result.ToJson();
                 }
                 catch (Exception ex)
@@ -225,41 +268,7 @@ namespace PersonalFramework.Controllers
                 return result.ToJson();
             }
         }
-        public bool EntityExists(string id)
-        {
-            return context.Set<T>().Any(e => e.ID == id);
-        }
-        public ActionResult UploadFile(HttpPostedFileBase file)
-        {
-            try
-            {
-                HttpPostedFileBase imgFile = Request.Files["imgFile"];
-                string oldLogo = "/Upload/";
-
-                string img = UploadPic.MvcUpload(file, new string[] { ".png", ".gif", ".jpg" }, 1, System.Web.HttpContext.Current.Server.MapPath(oldLogo));
-                img = ".." + oldLogo + img;
-                return Json(new { data = new { src = img }, code = 0, msg = "成功" }, JsonRequestBehavior.DenyGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(new { data = new { src = "" }, code = 500, msg = "上传失败" }, JsonRequestBehavior.DenyGet);
-            }
-        }
-        /// <summary>
-        /// 引用类型实体复制
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public static object DeepCopyObject(object obj)
-        {
-            BinaryFormatter Formatter = new BinaryFormatter(null,
-             new StreamingContext(StreamingContextStates.Clone));
-            MemoryStream stream = new MemoryStream();
-            Formatter.Serialize(stream, obj);
-            stream.Position = 0;
-            object clonedObj = Formatter.Deserialize(stream);
-            stream.Close();
-            return clonedObj;
-        }
+        
+        
     }
 }

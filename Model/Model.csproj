@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\ActionLog.cs" />
     <Compile Include="Entities\Admin.cs" />
     <Compile Include="Entities\Notice.cs" />
     <Compile Include="Entities\ArticleClass.cs" />

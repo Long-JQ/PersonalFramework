@@ -1,6 +1,7 @@
 ﻿using Model;
 using PagedList;
 using PersonalFramework.Service;
+using Service;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,6 +15,7 @@ using System.Web.Mvc;
 
 namespace PersonalFramework.Controllers
 {
+    [System.ComponentModel.DescriptionAttribute("角色")]
     public class RoleController : BaseController<Role>
     {
         DataContext context = new DataContext();
@@ -58,8 +60,31 @@ namespace PersonalFramework.Controllers
                 return RedirectToAction("index");
             }
         }
+        ///// <summary>
+        ///// 列表集合查询
+        ///// </summary>
+        ///// <param name="pagination"></param>
+        ///// <returns></returns>
+        //public new string List(Pagination pagination)
+        //{
+        //    try
+        //    {
+        //        var entityList = new List<Role>();
+        //        entityList = context.Set<Role>().ToList();
 
-        
+        //        var resultList = entityList.ToPagedList(pagination.page, pagination.limit).OrderByDescending(x => x.CreateTime);
+        //        ReturnData result = new ReturnData(0, "", entityList.Count, resultList, pagination.page);
+
+        //        return result.ToJson();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ReturnData result = new ReturnData(500, ex.Message);
+        //        return result.ToJson();
+        //    }
+        //}
+
+        [System.ComponentModel.DescriptionAttribute("编辑与新增")]
         /// <summary>
         /// 通用编辑与新增
         /// </summary>

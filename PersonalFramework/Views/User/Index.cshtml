@@ -18,7 +18,7 @@
         //第一个实例
         table.render({
             elem: '#dataTable'
-            , url: '/user/list' //数据接口
+            , url: '@Url.Action("list")' //数据接口
             , page: true //开启分页
             , toolbar: '#headtool'
             , cols: [[ //表头

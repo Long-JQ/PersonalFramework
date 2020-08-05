@@ -1,6 +1,8 @@
-﻿@model Model.User
+﻿@model Model.Admin
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    Model.DataContext context = new Model.DataContext();
+    var list = context.Roles.ToList();
 }
 
 <!DOCTYPE html>
@@ -16,14 +18,43 @@
 </head>
 <body>
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-        <legend>表单集合演示</legend>
+        <legend>编辑信息</legend>
     </fieldset>
 
-    <form class="layui-form" action="">
+    <form id="form" class="layui-form">
+        <input name="ID" value="@Model.ID" hidden />
         <div class="layui-form-item">
-            <label class="layui-form-label">单行输入框</label>
-            <div class="layui-input-block">
-                <input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="AdminName" autocomplete="off" placeholder="请输入用户名" class="layui-input" value="@Model.AdminName">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-inline">
+                <input type="password" name="Password" autocomplete="off" placeholder="请输入密码" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色</label>
+            <div class="layui-input-inline">
+                <select name="RoleID" lay-verify="required">
+                    <option value="">请选择</option>
+                    @{
+                        foreach (var item in list)
+                        {
+                            if (item.ID == Model.RoleID)
+                            {
+                                <option value="@item.ID" selected>@item.RoleName</option>
+                            }
+                            else
+                            {
+                                <option value="@item.ID">@item.RoleName</option>
+                            }
+
+                        }
+                    }
+                </select>
             </div>
         </div>
 
@@ -51,13 +82,17 @@
 
             //监听提交
             form.on('submit(demo1)', function (data) {
-                layer.alert(JSON.stringify(data.field), {
-                    title: '最终的提交信息'
-                })
-                 $.post('@Url.Action("Activation")', $('#form').serialize(), function (d) {
-                    if (d.Status == 200) {
-                        layer.msg('提交成功')
-                        location.href = '/appcenter/user/index';
+                //layer.alert(JSON.stringify(data.field), {
+                //    title: '最终的提交信息'
+                //})
+                 $.post('@Url.Action("Edit")', $('#form').serialize(), function (d) {
+                    if (d.code == 200) {
+                        layer.msg('提交成功', {
+                            time: 1000,
+                            end: function () {
+                                location.href = '@Url.Action("index")';
+                            }
+                        })
                     } else {
                         layer.msg(d.Message)
                     }

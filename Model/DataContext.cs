@@ -21,5 +21,6 @@ namespace Model
         public DbSet<Notice> Notices { get; set; }
         public DbSet<Authority> Authorities { get; set; }
         public DbSet<Test> Tests { get; set; }
+        public DbSet<ActionLog> ActionLog { get; set; }
     }
 }

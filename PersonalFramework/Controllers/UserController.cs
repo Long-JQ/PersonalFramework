@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace PersonalFramework.Controllers
 {
+    [System.ComponentModel.DescriptionAttribute("用户")]
     public class UserController : BaseController<User>
     {
         DataContext context = new DataContext();
